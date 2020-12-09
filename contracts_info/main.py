@@ -4,14 +4,14 @@ import reader_scraper
 
 
 def main():
-    filename = input('Enter the name of your .csv (ex. filename.csv): ')
+    filename = 'verified-contractaddress.csv'
     extension = 'sol'
     mode = input('Scraper or API? [S/A]: ')
     if mode == 'S':
         start_time = time.time()
         reader_scraper.scrape_from_bigquery_csv(filename, extension)
     elif mode == 'A':
-        key = input('Enter your API key: ')
+        key = '49T9ZJIGGRNUHG3SP746ZH53R9K7V4T5N1'
         start_time = time.time()
         reader_getter.get_source_code_from_bigquery_csv(filename, key, extension)
     else:

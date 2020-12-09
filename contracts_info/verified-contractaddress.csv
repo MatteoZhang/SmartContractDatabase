@@ -1,4 +1,3 @@
-Note: For the actual contract source codes use the api endpoints at https://etherscan.io/apis#contracts
 "Txhash","ContractAddress","ContractName"
 "0x66aeb5d83daf0bf842581cf7984bdc6b8028e47249ef4fcc69253e2f22f2bdbf","0x88f60c5bce0a3166e9afc77164955f2c7584e16a","BlackFriday"
 "0x3079c8dab565fbed117f1aa5bc38d79bd4fbfd5e0e5f722b443a8faa5610249f","0xD4783ec4548Fd1566421d9318B3EF564509f31F1","BiscuitToken"
