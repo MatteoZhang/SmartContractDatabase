@@ -55,3 +55,10 @@ class SimpleTokenizer(Tokenizer):
                 span,
             ))
         return Tokens(data, self.annotators)
+
+
+if __name__ == '__main__':
+    line_to_tok = "@dev CammelCase snake_snaky for {my friend;} \t @param"
+    tokens = SimpleTokenizer()
+    token = tokens.tokenize(line_to_tok)
+    print(token.words())
