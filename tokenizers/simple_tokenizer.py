@@ -58,7 +58,7 @@ class SimpleTokenizer(Tokenizer):
 
 
 if __name__ == '__main__':
-    line_to_tok = "@dev CammelCase snake_snaky for {my friend;} \t @param"
+    line_to_tok = "@dev CammelCase snake_snaky eliminate-elim for {my friend;} \t @param"
     tokens = SimpleTokenizer()
     token = tokens.tokenize(line_to_tok)
     print(token.words())
