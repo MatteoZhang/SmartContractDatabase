@@ -17,7 +17,7 @@ def double_tokenize(line):
 
 def main():
     code = "tokenizers\\smart_contracts_code\\code.original"
-    comment = "tokenizers\\smart_contracts_comment\\javadoc.original"
+    comment = "tokenizers\\smart_contracts_comment\\doc.original"
 
     code_token = []
     comment_token = []
@@ -29,8 +29,8 @@ def main():
         comment_line = read_comment.readlines()
         for i in range(len(comment_line)):
             comment_token.append(double_tokenize(comment_line[i]))
-    tok_code = open("tokenizers\\tok_code\\" + 'code.original', 'a+', encoding="utf8")
-    tok_comm = open("tokenizers\\tok_comm\\" + 'javadoc.original', 'a+', encoding="utf8")
+    tok_code = open("tokenizers\\smart_contracts_code\\" + 'code_tok.original', 'a+', encoding="utf8")
+    tok_comm = open("tokenizers\\smart_contracts_comment\\" + 'doc_tok.original', 'a+', encoding="utf8")
 
     i = 0
 

@@ -1,53 +1,5 @@
-// count number of bytes required to represent an unsigned integer
-// Spec: Get the account balance of another account with address `owner`
-// Spec: Send `value` amount of tokens to address `to`
-// Spec: Send `value` amount of tokens from address `from` to address `to`
-// Spec: Allow `spender` to withdraw from your account, multiple times, up // to the `value` amount. If this function is called again it overwrites the // current allowance with `value`.
-// Spec: Returns the `amount` which `spender` is still allowed to withdraw // from `owner`. // What if the allowance is higher than the balance of the `owner`? // Callers should be careful to use min(allowance, balanceOf) to make sure // that the allowance is actually present in the account!
-// totalSupply gives  the number of tokens currently in existence // Each token corresponds to one child contract that can be SELFDESTRUCTed // for a gas refund.
-// Creates a child contract that can only be destroyed by this contract.
-// Mints `value` new sub-tokens (e.g. cents, pennies, ...) by creating `value` // new child contracts. The minted tokens are owned by the caller of this // function.
-// Destroys `value` child contracts and updates s_tail. // // This function is affected by an issue in solc: https://github.com/ethereum/solidity/issues/2999 // The `mk_contract_address(this, i).call();` doesn't forward all available gas, but only GAS - 25710. // As a result, when this line is executed with e.g. 30000 gas, the callee will have less than 5000 gas // available and its SELFDESTRUCT operation will fail leading to no gas refund occurring. // The remaining ~29000 gas left after the call is enough to update s_tail and the caller's balance. // Hence tokens will have been destroyed without a commensurate gas refund. // Fortunately, there is a simple workaround: // Whenever you call free, freeUpTo, freeFrom, or freeUpToFrom, ensure that you pass at least // 25710 + `value` * (1148 + 5722 + 150) gas. (It won't all be used)
-// Frees `value` sub-tokens (e.g. cents, pennies, ...) belonging to the // caller of this function by destroying `value` child contracts, which // will trigger a partial gas refund. // You should ensure that you pass at least 25710 + `value` * (1148 + 5722 + 150) gas // when calling this function. For details, see the comment above `destroyChilden`.
-// Frees up to `value` sub-tokens. Returns how many tokens were freed. // Otherwise, identical to free. // You should ensure that you pass at least 25710 + `value` * (1148 + 5722 + 150) gas // when calling this function. For details, see the comment above `destroyChilden`.
-// Frees `value` sub-tokens owned by address `from`. Requires that `msg.sender` // has been approved by `from`. // You should ensure that you pass at least 25710 + `value` * (1148 + 5722 + 150) gas // when calling this function. For details, see the comment above `destroyChilden`.
-// Frees up to `value` sub-tokens owned by address `from`. Returns how many tokens were freed. // Otherwise, identical to `freeFrom`. // You should ensure that you pass at least 25710 + `value` * (1148 + 5722 + 150) gas // when calling this function. For details, see the comment above `destroyChilden`.
-/// @dev override to support legacy name
-/// Allow the owner to remove a whitelistAdmin
-// ------------------------------------------------------------------------ // Contract init. Set symbol, name, decimals and initial fixed supply // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Team and tokens unfreeze after 365 days from contract deploy // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Total supply // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Get the token balance for account `tokenOwner` // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Transfer the balance from token owner's account to `to` account // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Token owner can approve for `spender` to transferFrom(...) `tokens` // from the token owner's account // // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20-token-standard.md // recommends that there are no checks for the approval double-spend attack // as this should be implemented in user interfaces // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Transfer `tokens` from the `from` account to the `to` account // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Returns the amount of tokens approved by the owner that can be // transferred to the spender's account // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Token owner can approve for `spender` to transferFrom(...) `tokens` // from the token owner's account. The `spender` contract function // `receiveApproval(...)` is then executed // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Owner can transfer out any accidentally sent ERC20 tokens // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Tokens burn // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Tokens multisend from owner only by owner // ------------------------------------------------------------------------
 /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterChef).
 // Burn some channel, reduce total circulation.
-/* Getters */
-/* Methods */
-/// @dev Accepts ether and creates new tokens.
-/// @dev Ends the funding period and sends the ETH home
-/// @dev Allows contributors to recover their ether in the case of a failed funding campaign.
-/* Getters */
-/* Methods */
-/// @dev Accepts ether and creates new tokens.
-/// @dev Ends the funding period and sends the ETH home
-/// @dev Allows contributors to recover their ether in the case of a failed funding campaign.
-/* Getters */
-/* Methods */
-/// @dev Accepts ether and creates new tokens.
-/// @dev Ends the funding period and sends the ETH home
-/// @dev Allows contributors to recover their ether in the case of a failed funding campaign.
-/* Getters */
-/* Methods */
-/// @dev Accepts ether and creates new tokens.
-/// @dev Ends the funding period and sends the ETH home
-/// @dev Allows contributors to recover their ether in the case of a failed funding campaign.
 // ------------------------------------------------------------------------ // Total supply // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Get the token balance for account tokenOwner // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Transfer the balance from token owner's account to to account // - Owner's account must have sufficient balance to transfer // - 0 value transfers are allowed // ------------------------------------------------------------------------
@@ -96,6 +48,7 @@
 // ------------------------------------------------------------------------ // Token owner can approve for spender to transferFrom(...) tokens // from the token owner's account. The spender contract function // receiveApproval(...) is then executed // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Don't accept ETH // ------------------------------------------------------------------------
 // solhint-disable-previous-line no-empty-blocks
+/// @notice Creates `_amount` token to `_to`. Must only be called by the owner (MasterUnChairman).
 // solhint-disable-previous-line no-empty-blocks
 // stake visibility is public as overriding LPTokenWrapper's stake() function
 /// @notice Creates `_amount` token to `_to`. Must only be called by the owner.
@@ -323,11 +276,6 @@
 // Update dev address by the previous dev.
 // solhint-disable-previous-line no-empty-blocks
 // solhint-disable-previous-line no-empty-blocks
-// Deposit for 3, 6 or 12 months
-// Beneficiaries can update the receiver wallet
-// Helper function to release everything
-// Admin update functions
-// solhint-disable-previous-line no-empty-blocks
 // ------------------------------------------------------------------------ // Total supply // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Get the token balance for account tokenOwner // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Transfer the balance from token owner's account to to account // - Owner's account must have sufficient balance to transfer // - 0 value transfers are allowed // ------------------------------------------------------------------------
@@ -339,9 +287,6 @@
 // ------------------------------------------------------------------------ // Owner can transfer out any accidentally sent ERC20 tokens // ------------------------------------------------------------------------
 /// @notice Creates `_amount` token to `_to`. Must only be called by the owner (KiwiChef).
 // solhint-disable-previous-line no-empty-blocks
-// solhint-disable-previous-line no-empty-blocks
-// stake visibility is public as overriding LPTokenWrapper's stake() function
-// incase of airdrop token
 // Transfer recipient recives amount - fee
 // TransferFrom recipient recives amount, sender's account is debited amount + fee
 // ------------------------------------------------------------------------ // Total supply // ------------------------------------------------------------------------
@@ -352,14 +297,6 @@
 // ------------------------------------------------------------------------ // Returns the amount of tokens approved by the owner that can be // transferred to the spender's account // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Token owner can approve for spender to transferFrom(...) tokens // from the token owner's account. The spender contract function // receiveApproval(...) is then executed // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------ // Don't accept ETH // ------------------------------------------------------------------------
-// Its a payable function works as a token factory.
-//allows owner to burn tokens that are not sold in a crowdsale
-// This function creates Tokens
-// What is the balance of a particular account?
-// Transfer the balance from owner's account to another account
-// Send _value amount of tokens from address _from to address _to // The transferFrom method is used for a withdraw workflow, allowing contracts to send // tokens on your behalf, for example to "deposit" to a contract address and/or to charge // fees in sub-currencies; the command should fail unless the _from account has // deliberately authorized the sender of the message via some mechanism; we propose // these standardized APIs for approval:
-// Allow _spender to withdraw from your account, multiple times, up to the _value amount. // If this function is called again it overwrites the current allowance with _value.
-// Returns the amount which _spender is still allowed to withdraw from _owner
 // Add a new lp to the pool. Can only be called by the owner. // XXX DO NOT add the same LP token more than once. Rewards will be messed up if you do.
 // Update the given pool's CEFI allocation point. Can only be called by the owner.
 // Return the number of active blocks over the given _from to _to block.
@@ -422,6 +359,18 @@
 // Withdraw without caring about rewards. EMERGENCY ONLY.
 // Safe mink transfer function, just in case if rounding error causes pool to not have enough MINKs.
 // Update dev address by the previous dev.
+// solhint-disable-previous-line no-empty-blocks
+// ------------------------------------------------------------------------ // Calculate the number of days from 1970/01/01 to year/month/day using // the date conversion algorithm from //   http://aa.usno.navy.mil/faq/docs/JD_Formula.php // and subtracting the offset 2440588 so that 1970/01/01 is day 0 // // days = day //      - 32075 //      + 1461 * (year + 4800 + (month - 14) / 12) / 4 //      + 367 * (month - 2 - (month - 14) / 12 * 12) / 12 //      - 3 * ((year + 4900 + (month - 14) / 12) / 100) / 4 //      - offset // ------------------------------------------------------------------------
+// ------------------------------------------------------------------------ // Calculate year/month/day from the number of days since 1970/01/01 using // the date conversion algorithm from //   http://aa.usno.navy.mil/faq/docs/JD_Formula.php // and adding the offset 2440588 so that 1970/01/01 is day 0 // // int L = days + 68569 + offset // int N = 4 * L / 146097 // L = L - (146097 * N + 3) / 4 // year = 4000 * (L + 1) / 1461001 // L = L - 1461 * year / 4 + 31 // month = 80 * L / 2447 // dd = L - 2447 * month / 80 // L = month / 11 // month = month + 2 - 12 * L // year = 100 * (N - 49) + year + L // ------------------------------------------------------------------------
+// 1 = Monday, 7 = Sunday
+// ------------------------------------------------------- // this func need admin role. grantRole and revokeRole need admin role
+// function SetRoles(bytes32 roleType, address[] calldata addresses, bool[] calldata setTo) public { //     _setRoles(roleType, addresses, setTo); // } // Issue burn
+//
+//--------------------------------------------------------
+// claim reward // Note: 需要提前提前把奖励token转进来
+/// @dev Returns true if and only if the function is running in the constructor
+// Empty internal constructor, to prevent people from mistakenly deploying // an instance of this contract, which should be used via inheritance.
+// Pausing transfers of the token
 /// @dev Returns true if and only if the function is running in the constructor
 // Empty internal constructor, to prevent people from mistakenly deploying // an instance of this contract, which should be used via inheritance.
 // Custom logic in here for how much the vault allows to be borrowed // Sets minimum required on-hand to keep small withdrawals cheap
@@ -2113,9 +2062,3 @@
 //Buy back and airdrop
 /// @notice Creates `_amount` token to `_to`. Must only be called by the owner.
 // solhint-disable-previous-line no-empty-blocks
-// ------------------------------------------------------------------------ // Calculates onePercent of the uint256 amount sent // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Get the token balance for account `tokenOwner` // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Transfer the balance from token owner's account to `to` account // - Owner's account must have sufficient balance to transfer // - 0 value transfers are allowed // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Token owner can approve for `spender` to transferFrom(...) `tokens` // from the token owner's account // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Transfer `tokens` from the `from` account to the `to` account // // The calling account must already have sufficient tokens approve(...)-d // for spending from the `from` account and // - From account must have sufficient balance to transfer // - Spender must have sufficient allowance to transfer // - 0 value transfers are allowed // ------------------------------------------------------------------------
-// ------------------------------------------------------------------------ // Returns the amount of tokens approved by the owner that can be // transferred to the spender's account // ------------------------------------------------------------------------

@@ -114,19 +114,20 @@ class CommentSeparator:
 
 
 def main():
+    raw_code_dir = "../contracts_info/reader_getter_data"
     directory = "smart_contracts"
     raw_code = open(directory + "_code\\" + 'code.original', 'a+', encoding="utf8")
     open(directory + "_code\\" + 'code.original', 'w', encoding="utf8").close()
-    raw_comment = open(directory + "_comment\\" + 'javadoc.original', 'a+', encoding="utf8")
-    open(directory + "_comment\\" + 'javadoc.original', 'w', encoding="utf8").close()
+    raw_comment = open(directory + "_comment\\" + 'doc.original', 'a+', encoding="utf8")
+    open(directory + "_comment\\" + 'doc.original', 'w', encoding="utf8").close()
     comments = []
     codes = []
     file_num = 0
-    list_files = os.listdir(directory)
+    list_files = os.listdir(raw_code_dir)
 
     for filename in list_files:
         if filename.endswith(".sol"):
-            contract = os.path.join(directory, filename)
+            contract = os.path.join(raw_code_dir, filename)
             # example: 'smart_contracts\0x00ca5b4fcb1680c57da0a5a6c94a405822f960ab.sol'
             with open(contract, 'r', encoding="utf8") as raw:
                 lines = raw.readlines()  # array of lines
