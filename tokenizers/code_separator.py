@@ -123,11 +123,11 @@ def main():
     comments = []
     codes = []
     file_num = 0
-    list_files = os.listdir(raw_code_dir)
+    list_files = os.listdir(directory)
 
     for filename in list_files:
         if filename.endswith(".sol"):
-            contract = os.path.join(raw_code_dir, filename)
+            contract = os.path.join(directory, filename)
             # example: 'smart_contracts\0x00ca5b4fcb1680c57da0a5a6c94a405822f960ab.sol'
             with open(contract, 'r', encoding="utf8") as raw:
                 lines = raw.readlines()  # array of lines
