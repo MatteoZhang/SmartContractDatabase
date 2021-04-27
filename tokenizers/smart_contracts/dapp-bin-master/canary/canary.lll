@@ -1,2 +1,0 @@
-(returnlll (when (&& (= (caller) "0xCONTROLLER ADDRESS") (= (blockhash $0) $32)) [[0]] $64))
-
