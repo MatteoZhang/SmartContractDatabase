@@ -1,4 +1,31 @@
-import os
+stringa = '''// comm
+            /// comment
+            function () {
+                // comment 1
+                code code //comm 3
+                /*comment
+                 koko
+                 2*/
+            }
+            
+            /*
+            comment 4
+            */
+            
+            function(){
+                code2 // comment 3
+            }
+            
+            // evento ciao
+            event()
+            
+            
+            function(
+            ciao ciao
+            //commento ciao
+            )
+            
+            '''
 
 
 class CommentSeparator:
@@ -50,7 +77,7 @@ class CommentSeparator:
     def run(self):
         for i in range(len(self.test_lines)):
             try:
-                if any(self.test_lines[i].startswith(substring) for substring in self.keyword):
+                if any(substring in self.test_lines[i] for substring in self.keyword):
                     comment_present = False
                     tmp_code = ''
                     tmp_comment = ''
@@ -72,8 +99,8 @@ class CommentSeparator:
 
                     # comment inside code
                     # /*not considered*/
-                    tmp_comment = self.comment_inside(self.test_lines[i:i + sub_code_length + 1])
-                    tmp_code = self.code_inside(self.test_lines[i:i + sub_code_length + 1])
+                    tmp_comment = self.comment_inside(self.test_lines[i:i + sub_code_length+1])
+                    tmp_code = self.code_inside(self.test_lines[i:i + sub_code_length+1])
 
                     # comment above code
                     count_s = 0
@@ -99,7 +126,7 @@ class CommentSeparator:
                         tmp_comment1 = ' '.join(self.test_lines[i - count_m:i])
                         tmp_comment = ' '.join([tmp_comment1, tmp_comment])
 
-                    if comment_present and tmp_comment != '' and tmp_code != '':
+                    if comment_present:
                         self.comment.append(tmp_comment + '\n')
                         self.code.append(tmp_code + '\n')
                     try:
@@ -118,67 +145,11 @@ class CommentSeparator:
     def write_codes(self):
         return self.code
 
-    # we need matching codes and comments
-    def write_comments(self):
-        return self.comment
 
-    def write_codes(self):
-        return self.code
-
-
-def main():
-    raw_code_dir = "../contracts_info/reader_getter_data"
-    directory = "smart_contracts"
-    raw_code = open(directory + "_code\\" + 'code.original', 'a+', encoding="utf8")
-    open(directory + "_code\\" + 'code.original', 'w', encoding="utf8").close()
-    raw_comment = open(directory + "_comment\\" + 'doc.original', 'a+', encoding="utf8")
-    open(directory + "_comment\\" + 'doc.original', 'w', encoding="utf8").close()
-    comments = []
-    codes = []
-    file_num = 0
-    total = 0
-    for root, dirs, files in os.walk(directory):
-        for file in files:
-            if file.endswith(".sol"):
-                total += 1
-    print(total)
-
-    for root, dirs, files in os.walk(directory):
-        for filename in files:
-            if filename.endswith(".sol"):
-                contract = os.path.join(root, filename)
-                # print(contract)
-                # example: 'root\0x00ca5b4fcb1680c57da0a5a6c94a405822f960ab.sol'
-                with open(contract, 'r', encoding="utf8") as raw:
-                    lines = raw.readlines()  # array of lines
-                    valid = lines[0]
-                    if valid.startswith('{'):
-                        # filter the source codes if json format
-                        pass
-                    else:
-                        separator = CommentSeparator(lines)
-                        separator.run()
-                        comments = separator.write_comments()
-                        codes = separator.write_codes()
-                    lines.clear()
-                file_num += 1
-            else:
-                not_contract = os.path.join(root, filename)
-                os.remove(not_contract)
-            i = 0
-            if len(comments) == len(codes):
-                while i < len(comments):
-                    raw_comment.write(comments[i])
-                    raw_code.write(codes[i])
-                    i += 1
-            comments.clear()
-            codes.clear()
-
-        print(file_num, " / ", total)
-
-    raw_comment.close()
-    raw_code.close()
-
-
-if __name__ == '__main__':
-    main()
+lines = stringa.split("\n")
+separator = CommentSeparator(lines)
+separator.run()
+comments = separator.write_comments()
+codes = separator.write_codes()
+print(comments)
+print(codes)
