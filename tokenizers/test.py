@@ -145,7 +145,7 @@ class CommentSeparator:
     def write_codes(self):
         return self.code
 
-
+'''
 lines = stringa.split("\n")
 separator = CommentSeparator(lines)
 separator.run()
@@ -153,3 +153,7 @@ comments = separator.write_comments()
 codes = separator.write_codes()
 print(comments)
 print(codes)
+'''
+import sys
+sys.path.append('../')
+from tokenizers.tok_class.code_tokenizer import * 
