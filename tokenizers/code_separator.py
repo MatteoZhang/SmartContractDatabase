@@ -174,7 +174,7 @@ def main():
             comments.clear()
             codes.clear()
 
-        print(file_num, " / ", total)
+            print(file_num, " / ", total)
 
     raw_comment.close()
     raw_code.close()
