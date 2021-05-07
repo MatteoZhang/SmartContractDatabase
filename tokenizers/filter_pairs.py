@@ -4,7 +4,7 @@ SOURCECODE = 'smart_contracts_code/code_tok.original'
 COMMENT = 'smart_contracts_comment/doc_tok.original'
 OUT_SOURCE = 'smart_contracts_code/code_sampled.original'
 OUT_COMM = 'smart_contracts_comment/doc_sampled.original'
-LINES = 12000  # empirically 1/4 of LINES are expected as output
+LINES = 6000
 
 
 def main():
@@ -18,12 +18,10 @@ def main():
             for i in random_list:
                 code_sample.append(code_lines[i])
                 comm_sample.append(comm_lines[i])
-            code_set = list(set(code_sample))
-            comm_set = list(set(comm_sample))
     with open(OUT_SOURCE, 'w', encoding="utf8") as out_s:
         with open(OUT_COMM, 'w', encoding="utf8") as out_c:
-            out_s.writelines(code_set)
-            out_c.writelines(comm_set)
+            out_s.writelines(code_sample)
+            out_c.writelines(comm_sample)
 
 
 if __name__ == '__main__':
