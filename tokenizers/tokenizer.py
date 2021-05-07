@@ -23,6 +23,7 @@ def main():
 
     code_token = []
     comment_token = []
+    keywords = ["function", "event", "modifier", "enum"]
     with open(code, 'r', encoding="utf8") as read_code:
         with open(comment, 'r', encoding="utf8") as read_comment:
             code_line = read_code.readlines()
@@ -32,8 +33,6 @@ def main():
                     if comment_line[i].isascii():
                         code_token.append(double_tokenize(code_line[i]))
                         comment_token.append(double_tokenize(comment_line[i]))
-                    else:
-                        print(comment_line[i])
                 except Exception as e:
                     print(e)
 
