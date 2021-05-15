@@ -4,7 +4,7 @@ import reader_scraper
 
 
 def main():
-    filename = 'verified-contractaddress.csv'
+    filename = 'verified-contractaddress_2.csv'
     extension = 'sol'
     mode = input('Scraper or API? [S/A]: ')
     if mode == 'S':
