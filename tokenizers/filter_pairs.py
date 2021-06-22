@@ -25,7 +25,7 @@ def main():
                 x = comm_lines[i] in comm_sample
                 y = code_lines[i] in code_sample
                 if not x and comm_lines[i] != '':
-                # if comm_lines[i] != '':
+                    # if comm_lines[i] != '':
                     code_sample.append(code_lines[i])
                     comm_sample.append(comm_lines[i])
             # ======
