@@ -1,5 +1,5 @@
 # SmartContractDatabase
- SmartContractDatabase is a little program to gather smart contracts
+ SmartContractDatabase is a little program to gather smart contracts and create code comment pairs for solidity language
  
  the folder contract info will help u to download the smartcontracts from etherscan.io. 
  the neccessary input file is a list of smartcontract address.
