@@ -18,8 +18,8 @@ def double_tokenize(line):
 
 
 def main():
-    code = "smart_contracts_code\\code.original"
-    comment = "smart_contracts_comment\\doc.original"
+    code = "smart_contracts_CodeComm\\code.original"  # directory of code
+    comment = "smart_contracts_CodeComm\\doc.original"  # directory of comment
 
     code_token = []
     comment_token = []
@@ -36,8 +36,8 @@ def main():
                 except Exception as e:
                     print(e)
 
-    tok_code = open("smart_contracts_code\\" + 'code_tok.original', 'a+', encoding="utf8")
-    tok_comm = open("smart_contracts_comment\\" + 'doc_tok.original', 'a+', encoding="utf8")
+    tok_code = open("smart_contracts_CodeComm\\" + 'code_tok.original', 'a+', encoding="utf8")
+    tok_comm = open("smart_contracts_CodeComm\\" + 'doc_tok.original', 'a+', encoding="utf8")
 
     i = 0
 

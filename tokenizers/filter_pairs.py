@@ -1,10 +1,9 @@
 import random
-from collections import Counter
 
-SOURCECODE = 'smart_contracts_code/code_tok.original'
-COMMENT = 'smart_contracts_comment/doc_tok.original'
-OUT_SOURCE = 'smart_contracts_code/code_sampled.original'
-OUT_COMM = 'smart_contracts_comment/doc_sampled.original'
+SOURCECODE = 'smart_contracts__CodeComm/code_tok.original'
+COMMENT = 'smart_contracts__CodeComm/doc_tok.original'
+OUT_SOURCE = 'smart_contracts__CodeComm/code_sampled.original'
+OUT_COMM = 'smart_contracts__CodeComm/doc_sampled.original'
 LINES = 60000
 
 
