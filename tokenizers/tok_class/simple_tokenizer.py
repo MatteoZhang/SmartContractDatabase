@@ -13,7 +13,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-#!/usr/bin/env python3
+# !/usr/bin/env python3
 # Copyright 2017-present, Facebook, Inc.
 # All rights reserved.
 #
@@ -152,6 +152,7 @@ class Tokenizer(object):
 
     def __del__(self):
         self.shutdown()
+
 
 class SimpleTokenizer(Tokenizer):
     ALPHA_NUM = r'[\p{L}\p{N}\p{M}]+'

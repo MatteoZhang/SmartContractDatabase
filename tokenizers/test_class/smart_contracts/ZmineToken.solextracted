@@ -1,0 +1,73 @@
+function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; assert(c / a == b); return c; }
+function div(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a / b; return c; }
+function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; assert(c >= a); return c; }
+event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+function Ownable() public { owner = msg.sender; }
+modifier onlyOwner() { require(msg.sender == owner); _; }
+function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+event AuthorizationSet(address indexed addressAuthorized, bool indexed authorization);
+function Authorizable() public { AuthorizationSet(msg.sender, true); authorized[msg.sender] = true; }
+modifier onlyAuthorized() { require(authorized[msg.sender]); _; }
+function setAuthorized(address addressAuthorized, bool authorization) public onlyOwner { require(authorized[addressAuthorized] != authorization); AuthorizationSet(addressAuthorized, authorization); authorized[addressAuthorized] = authorization; }
+event WhiteListSet(address addressWhiteListed, bool whiteListStatus);
+function WhiteList() public { WhiteListSet(msg.sender, true); whiteListed[msg.sender] = true; }
+modifier onlyWhiteListed() { require(whiteListed[msg.sender]); _; }
+function isWhiteListed(address _address) public view returns (bool) { return whiteListed[_address]; }
+function setWhiteListed(address addressWhiteListed, bool whiteListStatus) public onlyAuthorized { require(whiteListed[addressWhiteListed] != whiteListStatus); WhiteListSet(addressWhiteListed, whiteListStatus); whiteListed[addressWhiteListed] = whiteListStatus; }
+function balanceOf(address who) public view returns (uint256);
+function transfer(address to, uint256 value) public returns (bool);
+event Transfer(address indexed from, address indexed to, uint256 value);
+function allowance(address owner, address spender) public view returns (uint256);
+function transferFrom(address from, address to, uint256 value) public returns (bool);
+function approve(address spender, uint256 value) public returns (bool);
+event Approval(address indexed owner, address indexed spender, uint256 value);
+function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); Transfer(msg.sender, _to, _value); return true; }
+function balanceOf(address _owner) public view returns (uint256 balance) { return balances[_owner]; }
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[_from]); require(_value <= allowed[_from][msg.sender]); balances[_from] = balances[_from].sub(_value); balances[_to] = balances[_to].add(_value); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); Transfer(_from, _to, _value); return true; }
+function approve(address _spender, uint256 _value) public returns (bool) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; }
+function allowance(address _owner, address _spender) public view returns (uint256 remaining) { return allowed[_owner][_spender]; }
+function increaseApproval (address _spender, uint _addedValue) public returns (bool success) { allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue); Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+function decreaseApproval (address _spender, uint _subtractedValue) public returns (bool success) { uint oldValue = allowed[msg.sender][_spender]; if (_subtractedValue > oldValue) { allowed[msg.sender][_spender] = 0; } else { allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue); } Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+function TreasureBox(ZMINE _token, address _beneficiary, uint _releaseTime) public { require(_beneficiary != address(0)); token = _token; beneficiary = _beneficiary; releaseTime = _releaseTime; }
+function claim() external { require(available()); require(amount() > 0); token.transfer(beneficiary, amount()); }
+function available() public view returns (bool) { return (now >= releaseTime); }
+function amount() public view returns (uint256) { return token.balanceOf(this); }
+event SetDestination(address _address, address _destination);
+event SetExchanger(address _address, bool _isExchanger);
+event AirDrop(address _address, uint _value);
+function AirDropToken () public { held[owner] = true; holdersList.length++; holdersList[holdersList.length - 1] = owner; }
+function addHoldersList (address _address) private { if (held[_address] == false) { held[_address] = true; holdersList.length++; holdersList[holdersList.length - 1] = _address; holdersIndex[_address] = holdersList.length - 1; } }
+function setTreasureBox (address _address, bool _status) public onlyAuthorized { require(_address != address(0)); require(isTreasureBox[_address] != _status); isTreasureBox[_address] = _status; }
+function setExchanger(address _address, bool _isExchanger) external onlyAuthorized { require(_address != address(0)); require(isAnExchanger[_address] != _isExchanger); addHoldersList(_address); isAnExchanger[_address] = _isExchanger; SetExchanger(_address, _isExchanger); }
+function setAirDropDestination(address _destination) external { require(_destination != msg.sender); addHoldersList(_destination); airDropDestinations[msg.sender] = _destination; SetDestination(msg.sender, _destination); }
+function setAirDropDestinationAndApprove(address _destination, address _spender, uint _value) external { require(_destination != msg.sender); addHoldersList(_destination); allowed[msg.sender][_spender] = _value; airDropDestinations[msg.sender] = _destination; Approval(msg.sender, _spender, _value); SetDestination(msg.sender, _destination); }
+function transfer(address _to, uint256 _value) public returns (bool) { require(super.transfer(_to, _value)); addHoldersList(_to); return true; }
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(super.transferFrom(_from, _to, _value)); addHoldersList(_to); return true; }
+function multiTransfer(address[] _address, uint[] _value) public returns (bool) { for (uint i = 0; i < _address.length; i++) { transfer(_address[i], _value[i]); } return true; }
+function airDrop(uint _value, uint _minimum, uint _maximum, uint _txFee) external onlyOwner { uint sumTotal = 0; uint i; uint[] memory airdropAmount = new uint[](holdersList.length); for (i = 0; i < holdersList.length; i++) { bool validUser = holdersList[i] != owner && !isTreasureBox[holdersList[i]]; bool qualifiedUser = balances[holdersList[i]] <= _maximum && (balances[holdersList[i]] >= _minimum || isAnExchanger[airDropDestinations[holdersList[i]]] || isAnExchanger[holdersList[i]]); if ( validUser && qualifiedUser ) { sumTotal = sumTotal.add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum and set destinatios && who have set destinations to exchanger and have tokens <= _maximum airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]] = airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]].add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum && exchanger and token <= _maximum airdropAmount[i] = airdropAmount[i].add(balances[holdersList[i]]); } } } for (i = 0; i < holdersList.length; i++) { if (airdropAmount[i] > 0) { if (_value.mul(airdropAmount[i]).div(sumTotal) > _txFee) { uint tokens = _value.mul(airdropAmount[i]).div(sumTotal).sub(_txFee); balances[owner] = balances[owner].sub(tokens); balances[holdersList[i]] = balances[holdersList[i]].add(tokens);  AirDrop(owner, holder, tokens); } } } }
+function ZMINE() public { balances[owner] = totalSupply; Transfer(address(0x0), owner, totalSupply); }
+function burn(uint _amount) external onlyOwner { require(balances[owner] >= _amount); balances[owner] = balances[owner] - _amount; totalSupply = totalSupply - _amount; Transfer(owner, address(0x0), _amount); }
+function updateRate(uint _rate) public onlyAuthorized { require(rate != _rate); rate = _rate; }
+function getRate() public view returns (uint) { return rate; }
+event TokenTransferForFounder(address _recipient, uint _value, address box1, address box2);
+function FounderThreader (ZMINE _token, address[] _founders) public { token = ZMINE(_token); for (uint i = 0; i < _founders.length; i++) { isFounder[_founders[i]] = true; } }
+function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(_tokens >= minTx); require(isFounder[_recipient]);  can open 2018-07-08 09+07:00  can open 2019-01-08 09+07:00 token.setTreasureBox(box1, true); token.setTreasureBox(box2, true);  33 % for now  33 % for box1  34 % for box2 remain = remain.sub(_tokens); TokenTransferForFounder(_recipient, _tokens, box1, box2); }
+event TokenSold(address _recipient, uint _value, uint _tokens, uint _rate);
+event TokenSold(address _recipient, uint _tokens);
+function PreSale (ZMINE _token, RateContract _rateContract, WhiteList _whitelist) public { token = ZMINE(_token); rateContract = RateContract(_rateContract); whitelist = WhiteList(_whitelist); }
+function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(available()); remain = remain.sub(_tokens); token.transferFrom(owner, _recipient, _tokens); TokenSold(_recipient, _tokens); }
+function sale(address _recipient, uint _value, uint _rate) private { require(_recipient != address(0)); require(available()); require(isWhiteListed(_recipient)); require(_value >= minTx && _value <= maxTx); uint tokens = _rate.mul(_value).div(1 ether); remain = remain.sub(tokens); token.transferFrom(owner, _recipient, tokens); owner.transfer(_value); TokenSold(_recipient, _value, tokens, _rate); }
+function rate() public view returns (uint) { return rateContract.getRate(); }
+function available() public view returns (bool) { return (now > startDate && now < stopDate); }
+function isWhiteListed(address _address) public view returns (bool) { return whitelist.isWhiteListed(_address); }
+function() external payable { sale(msg.sender, msg.value, rate()); }
+event TokenSold(address _recipient, uint _value, uint _tokens, uint _rate);
+event IncreaseHardCap(uint _amount);
+function ICOSale(ZMINE _token, RateContract _rateContract, WhiteList _whitelistPRE, WhiteList _whitelistICO) public { token = ZMINE(_token); rateContract = RateContract(_rateContract); whitelistPRE = WhiteList(_whitelistPRE); whitelistICO = WhiteList(_whitelistICO); }
+function increaseHardCap(uint _amount) external onlyOwner { hardCap = hardCap.add(_amount); remain = remain.add(_amount); IncreaseHardCap(_amount); }
+function sale(address _recipient, uint _value, uint _rate) private { require(available()); require(isWhiteListed(_recipient)); require(_value >= minTx && _value <= maxTx); uint tokens = _rate.mul(_value).div(1 ether); remain = remain.sub(tokens); token.transferFrom(owner, _recipient, tokens); owner.transfer(_value); TokenSold(_recipient, _value, tokens, _rate); }
+function rate() public view returns (uint) { return rateContract.getRate(); }
+function available () public view returns (bool) { return (now > startDate && now < stopDate); }
+function isWhiteListed (address _address) public view returns(bool) { return (whitelistPRE.isWhiteListed(_address) || (whitelistICO.isWhiteListed(_address))); }
+function() external payable { sale(msg.sender, msg.value, rate()); }

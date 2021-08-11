@@ -1,0 +1,192 @@
+function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; require(c >= a, "SafeMath: addition overflow"); return c; }
+function sub(uint256 a, uint256 b) internal pure returns (uint256) { return sub(a, b, "SafeMath: subtraction overflow"); }
+function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b <= a, errorMessage); uint256 c = a - b; return c; }
+function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; require(c / a == b, "SafeMath: multiplication overflow"); return c; }
+function div(uint256 a, uint256 b) internal pure returns (uint256) { return div(a, b, "SafeMath: division by zero"); }
+function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b > 0, errorMessage); uint256 c = a / b; return c; }
+function mod(uint256 a, uint256 b) internal pure returns (uint256) { return mod(a, b, "SafeMath: modulo by zero"); }
+function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b != 0, errorMessage); return a % b; }
+function totalSupply() external view returns (uint256);
+function balanceOf(address account) external view returns (uint256);
+function transfer(address recipient, uint256 amount) external returns (bool);
+function allowance(address owner, address spender) external view returns (uint256);
+function approve(address spender, uint256 amount) external returns (bool);
+function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+event Transfer(address indexed from, address indexed to, uint256 value);
+event Approval(address indexed owner, address indexed spender, uint256 value);
+event OwnershipTransferAuthorization(address indexed authorizedAddress);
+event OwnerUpdate(address indexed oldValue, address indexed newValue);
+function owner() public view returns (address) { return _owner; }
+function authorizedNewOwner() public view returns (address) { return _authorizedNewOwner; }
+function authorizeOwnershipTransfer(address _authorizedAddress) external { require(msg.sender == _owner, "Invalid sender"); _authorizedNewOwner = _authorizedAddress; emit OwnershipTransferAuthorization(_authorizedNewOwner); }
+function assumeOwnership() external { require(msg.sender == _authorizedNewOwner, "Invalid sender"); address oldValue = _owner; _owner = _authorizedNewOwner; _authorizedNewOwner = address(0); emit OwnerUpdate(oldValue, _owner); }
+function canImplementInterfaceForAddress( bytes32 _interfaceHash,  Comments to avoid compilation warnings for unused variables. /*addr*/ ) external view returns (bytes32) { if (_interfaceHashes[_interfaceHash]) { return ERC1820_ACCEPT_MAGIC; } else { return ""; } }
+function _setInterface(string memory _interfaceLabel) internal { _interfaceHashes[keccak256(abi.encodePacked(_interfaceLabel))] = true; }
+function canTransfer( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external view returns (bool);
+function tokensToTransfer( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external;
+function canReceive( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external view returns (bool);
+function tokensReceived( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external;
+function _getDestinationPartition(bytes memory _data, bytes32 _fallbackPartition)
+function _getPartitionPrefix(bytes32 _partition) internal pure returns (bytes4) { return bytes4(_partition); }
+function _splitPartition(bytes32 _partition)
+function _getPartitionStrategyValidatorIName(bytes4 _prefix)
+event TransferByPartition( bytes32 indexed fromPartition, address operator, address indexed from, address indexed to, uint256 value, bytes data, bytes operatorData );
+event ChangedPartition( bytes32 indexed fromPartition, bytes32 indexed toPartition, uint256 value );
+event ApprovalByPartition( bytes32 indexed partition, address indexed owner, address indexed spender, uint256 value );
+event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
+event RevokedOperator(address indexed operator, address indexed tokenHolder);
+event AuthorizedOperatorByPartition( bytes32 indexed partition, address indexed operator, address indexed tokenHolder );
+event RevokedOperatorByPartition( bytes32 indexed partition, address indexed operator, address indexed tokenHolder );
+event CollateralManagerRegistered(address collateralManager);
+event PartitionStrategySet(bytes4 flag, string name, address indexed implementation);
+event Minted(address indexed operator, address indexed to, uint256 value, bytes data);
+event Swap(address indexed operator, address indexed from, uint256 value);
+function totalSupply() external override view returns (uint256) { return _totalSupply; }
+function balanceOf(address _tokenHolder) external override view returns (uint256) { return _balances[_tokenHolder]; }
+function transfer(address _to, uint256 _value) external override returns (bool) { _transferByDefaultPartition(msg.sender, msg.sender, _to, _value, ""); return true; }
+function transferFrom( address _from, address _to, uint256 _value ) external override returns (bool) { _transferByDefaultPartition(msg.sender, _from, _to, _value, ""); return true; }
+function allowance(address _owner, address _spender)
+function approve(address _spender, uint256 _value) external override returns (bool) { _approveByPartition(defaultPartition, msg.sender, _spender, _value); return true; }
+function increaseAllowance(address _spender, uint256 _addedValue)
+function decreaseAllowance(address _spender, uint256 _subtractedValue)
+function swap(address _from) public { uint256 amount = swapToken.allowance(_from, address(this)); require(amount > 0, EC_53_INSUFFICIENT_ALLOWANCE); require( swapToken.transferFrom(_from, swapTokenGraveyard, amount), EC_60_SWAP_TRANSFER_FAILURE ); _mint(msg.sender, _from, amount); emit Swap(msg.sender, _from, amount); }
+function balanceOfByPartition(bytes32 _partition, address _tokenHolder)
+function partitionsOf(address _tokenHolder) external view returns (bytes32[] memory) { return _partitionsOf[_tokenHolder]; }
+function transferByPartition( bytes32 _partition, address _from, address _to, uint256 _value, bytes calldata _data, bytes calldata _operatorData ) external returns (bytes32) { return _transferByPartition( _partition, msg.sender, _from, _to, _value, _data, _operatorData ); }
+function authorizeOperator(address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperator[msg.sender][_operator] = true; emit AuthorizedOperator(_operator, msg.sender); }
+function revokeOperator(address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperator[msg.sender][_operator] = false; emit RevokedOperator(_operator, msg.sender); }
+function authorizeOperatorByPartition(bytes32 _partition, address _operator)
+function revokeOperatorByPartition(bytes32 _partition, address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperatorByPartition[msg.sender][_partition][_operator] = false; emit RevokedOperatorByPartition(_partition, _operator, msg.sender); }
+function isOperator(address _operator, address _tokenHolder)
+function isOperatorForPartition( bytes32 _partition, address _operator, address _tokenHolder ) external view returns (bool) { return _isOperatorForPartition(_partition, _operator, _tokenHolder); }
+function isOperatorForCollateralManager( bytes32 _partition, address _operator, address _collateralManager ) external view returns (bool) { return _isCollateralManager[_collateralManager] && (_isOperator(_operator, _collateralManager) || _authorizedOperatorByPartition[_collateralManager][_partition][_operator]); }
+function name() external view returns (string memory) { return _name; }
+function symbol() external view returns (string memory) { return _symbol; }
+function decimals() external pure returns (uint8) { return uint8(18); }
+function granularity() external pure returns (uint256) { return _granularity; }
+function totalPartitions() external view returns (bytes32[] memory) { return _totalPartitions; }
+function allowanceByPartition( bytes32 _partition, address _owner, address _spender ) external view returns (uint256) { return _allowedByPartition[_partition][_owner][_spender]; }
+function approveByPartition( bytes32 _partition, address _spender, uint256 _value ) external returns (bool) { _approveByPartition(_partition, msg.sender, _spender, _value); return true; }
+function increaseAllowanceByPartition( bytes32 _partition, address _spender, uint256 _addedValue ) external returns (bool) { _approveByPartition( _partition, msg.sender, _spender, _allowedByPartition[_partition][msg.sender][_spender].add(_addedValue) ); return true; }
+function decreaseAllowanceByPartition( bytes32 _partition, address _spender, uint256 _subtractedValue ) external returns (bool) { _approveByPartition( _partition, msg.sender, _spender, _allowedByPartition[_partition][msg.sender][_spender].sub(_subtractedValue) ); return true; }
+function registerCollateralManager() external { require(!_isCollateralManager[msg.sender], EC_5C_ADDRESS_CONFLICT); collateralManagers.push(msg.sender); _isCollateralManager[msg.sender] = true; emit CollateralManagerRegistered(msg.sender); }
+function isCollateralManager(address _collateralManager)
+function setPartitionStrategy(bytes4 _prefix, address _implementation) external { require(msg.sender == owner(), EC_56_INVALID_SENDER); require(!_isPartitionStrategy[_prefix], EC_5E_PARTITION_PREFIX_CONFLICT); require(_prefix != ZERO_PREFIX, EC_5F_INVALID_PARTITION_PREFIX_0); string memory iname = PartitionUtils._getPartitionStrategyValidatorIName(_prefix); ERC1820Client.setInterfaceImplementation(iname, _implementation); partitionStrategies.push(_prefix); _isPartitionStrategy[_prefix] = true; emit PartitionStrategySet(_prefix, iname, _implementation); }
+function isPartitionStrategy(bytes4 _prefix) external view returns (bool) { return _isPartitionStrategy[_prefix]; }
+function _transferByPartition( bytes32 _fromPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal returns (bytes32) { require(_to != address(0), EC_57_INVALID_RECEIVER); if (_from != _operator) { require( _isOperatorForPartition(_fromPartition, _operator, _from) || (_value <= _allowedByPartition[_fromPartition][_from][_operator]), EC_53_INSUFFICIENT_ALLOWANCE ); if (_allowedByPartition[_fromPartition][_from][_operator] >= _value) { _allowedByPartition[_fromPartition][_from][msg .sender] = _allowedByPartition[_fromPartition][_from][_operator].sub( _value ); } else { _allowedByPartition[_fromPartition][_from][_operator] = 0; } } _callPreTransferHooks( _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); require( _balanceOfByPartition[_from][_fromPartition] >= _value, EC_52_INSUFFICIENT_BALANCE ); bytes32 toPartition = PartitionUtils._getDestinationPartition( _data, _fromPartition ); _removeTokenFromPartition(_from, _fromPartition, _value); _addTokenToPartition(_to, toPartition, _value); _callPostTransferHooks( toPartition, _operator, _from, _to, _value, _data, _operatorData ); emit Transfer(_from, _to, _value); emit TransferByPartition( _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); if (toPartition != _fromPartition) { emit ChangedPartition(_fromPartition, toPartition, _value); } return toPartition; }
+function _transferByDefaultPartition( address _operator, address _from, address _to, uint256 _value, bytes memory _data ) internal { _transferByPartition(defaultPartition, _operator, _from, _to, _value, _data, ""); }
+function _removeTokenFromPartition( address _from, bytes32 _partition, uint256 _value ) internal { if (_value == 0) { return; } _balances[_from] = _balances[_from].sub(_value); _balanceOfByPartition[_from][_partition] = _balanceOfByPartition[_from][_partition] .sub(_value); totalSupplyByPartition[_partition] = totalSupplyByPartition[_partition].sub( _value ); if (totalSupplyByPartition[_partition] == 0 && _partition != defaultPartition) { _removePartitionFromTotalPartitions(_partition); } if (_balanceOfByPartition[_from][_partition] == 0) { uint256 index = _indexOfPartitionsOf[_from][_partition]; if (index == 0) { return; } bytes32 lastValue = _partitionsOf[_from][_partitionsOf[_from].length - 1];  adjust for 1-based indexing _indexOfPartitionsOf[_from][lastValue] = index; _partitionsOf[_from].pop(); _indexOfPartitionsOf[_from][_partition] = 0; } }
+function _addTokenToPartition( address _to, bytes32 _partition, uint256 _value ) internal { if (_value == 0) { return; } _balances[_to] = _balances[_to].add(_value); if (_indexOfPartitionsOf[_to][_partition] == 0) { _partitionsOf[_to].push(_partition); _indexOfPartitionsOf[_to][_partition] = _partitionsOf[_to].length; } _balanceOfByPartition[_to][_partition] = _balanceOfByPartition[_to][_partition] .add(_value); if (_indexOfTotalPartitions[_partition] == 0) { _addPartitionToTotalPartitions(_partition); } totalSupplyByPartition[_partition] = totalSupplyByPartition[_partition].add( _value ); }
+function _addPartitionToTotalPartitions(bytes32 _partition) internal { _totalPartitions.push(_partition); _indexOfTotalPartitions[_partition] = _totalPartitions.length; }
+function _removePartitionFromTotalPartitions(bytes32 _partition) internal { uint256 index = _indexOfTotalPartitions[_partition]; if (index == 0) { return; } bytes32 lastValue = _totalPartitions[_totalPartitions.length - 1];  adjust for 1-based indexing _indexOfTotalPartitions[lastValue] = index; _totalPartitions.pop(); _indexOfTotalPartitions[_partition] = 0; }
+function _callPreTransferHooks( bytes32 _fromPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal { address senderImplementation; senderImplementation = interfaceAddr(_from, AMP_TOKENS_SENDER); if (senderImplementation != address(0)) { IAmpTokensSender(senderImplementation).tokensToTransfer( msg.sig, _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); } bytes4 fromPartitionPrefix = PartitionUtils._getPartitionPrefix(_fromPartition); if (_isPartitionStrategy[fromPartitionPrefix]) { address fromPartitionValidatorImplementation; fromPartitionValidatorImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(fromPartitionPrefix) ); if (fromPartitionValidatorImplementation != address(0)) { IAmpPartitionStrategyValidator(fromPartitionValidatorImplementation) .tokensFromPartitionToValidate( msg.sig, _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); } } }
+function _callPostTransferHooks( bytes32 _toPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal { bytes4 toPartitionPrefix = PartitionUtils._getPartitionPrefix(_toPartition); if (_isPartitionStrategy[toPartitionPrefix]) { address partitionManagerImplementation; partitionManagerImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(toPartitionPrefix) ); if (partitionManagerImplementation != address(0)) { IAmpPartitionStrategyValidator(partitionManagerImplementation) .tokensToPartitionToValidate( msg.sig, _toPartition, _operator, _from, _to, _value, _data, _operatorData ); } } else { require(toPartitionPrefix == ZERO_PREFIX, EC_5D_PARTITION_RESERVED); } address recipientImplementation; recipientImplementation = interfaceAddr(_to, AMP_TOKENS_RECIPIENT); if (recipientImplementation != address(0)) { IAmpTokensRecipient(recipientImplementation).tokensReceived( msg.sig, _toPartition, _operator, _from, _to, _value, _data, _operatorData ); } }
+function _approveByPartition( bytes32 _partition, address _tokenHolder, address _spender, uint256 _amount ) internal { require(_tokenHolder != address(0), EC_56_INVALID_SENDER); require(_spender != address(0), EC_58_INVALID_OPERATOR); _allowedByPartition[_partition][_tokenHolder][_spender] = _amount; emit ApprovalByPartition(_partition, _tokenHolder, _spender, _amount); if (_partition == defaultPartition) { emit Approval(_tokenHolder, _spender, _amount); } }
+function _isOperator(address _operator, address _tokenHolder)
+function _isOperatorForPartition( bytes32 _partition, address _operator, address _tokenHolder ) internal view returns (bool) { return (_isOperator(_operator, _tokenHolder) || _authorizedOperatorByPartition[_tokenHolder][_partition][_operator] || _callPartitionStrategyOperatorHook(_partition, _operator, _tokenHolder)); }
+function _callPartitionStrategyOperatorHook( bytes32 _partition, address _operator, address _tokenHolder ) internal view returns (bool) { bytes4 prefix = PartitionUtils._getPartitionPrefix(_partition); if (!_isPartitionStrategy[prefix]) { return false; } address strategyValidatorImplementation; strategyValidatorImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(prefix) ); if (strategyValidatorImplementation != address(0)) { return IAmpPartitionStrategyValidator(strategyValidatorImplementation) .isOperatorForPartitionScope(_partition, _operator, _tokenHolder); } return false; }
+function _mint( address _operator, address _to, uint256 _value ) internal { require(_to != address(0), EC_57_INVALID_RECEIVER); _totalSupply = _totalSupply.add(_value); _addTokenToPartition(_to, defaultPartition, _value); _callPostTransferHooks( defaultPartition, _operator, address(0), _to, _value, "", "" ); emit Minted(_operator, _to, _value, ""); emit Transfer(address(0), _to, _value); emit TransferByPartition(bytes32(0), _operator, address(0), _to, _value, "", ""); }
+function totalSupply() constant returns (uint256 supply) {}
+function balanceOf(address _owner) constant returns (uint256 balance) {}
+function transfer(address _to, uint256 _value) returns (bool success) {}
+function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {}
+function approve(address _spender, uint256 _value) returns (bool success) {}
+function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
+function isContract(address addr) internal view returns (bool) { uint256 size; assembly { size := extcodesize(addr) } return size > 0; }
+function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; assert(c / a == b); return c; }
+function div(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a / b; return c; }
+function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; assert(c >= a); return c; }
+function Ownable() public { owner = msg.sender; }
+modifier onlyOwner() { require(msg.sender == owner); _; }
+function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+modifier onlyOwnerOf(uint256 _tokenId) { require(ownerOf(_tokenId) == msg.sender); _; }
+modifier canTransfer(uint256 _tokenId) { require(isApprovedOrOwner(msg.sender, _tokenId)); _; }
+function balanceOf(address _owner) public view returns (uint256) { require(_owner != address(0)); return ownedTokensCount[_owner]; }
+function ownerOf(uint256 _tokenId) public view returns (address) { address owner = tokenOwner[_tokenId]; require(owner != address(0)); return owner; }
+function exists(uint256 _tokenId) public view returns (bool) { address owner = tokenOwner[_tokenId]; return owner != address(0); }
+function approve(address _to, uint256 _tokenId) public { address owner = ownerOf(_tokenId); require(_to != owner); require(msg.sender == owner || isApprovedForAll(owner, msg.sender)); if (getApproved(_tokenId) != address(0) || _to != address(0)) { tokenApprovals[_tokenId] = _to; Approval(owner, _to, _tokenId); } }
+function getApproved(uint256 _tokenId) public view returns (address) { return tokenApprovals[_tokenId]; }
+function setApprovalForAll(address _to, bool _approved) public { require(_to != msg.sender); operatorApprovals[msg.sender][_to] = _approved; ApprovalForAll(msg.sender, _to, _approved); }
+function isApprovedForAll(address _owner, address _operator) public view returns (bool) { return operatorApprovals[_owner][_operator]; }
+function transferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId) { require(_from != address(0)); require(_to != address(0)); clearApproval(_from, _tokenId); removeTokenFrom(_from, _tokenId); addTokenTo(_to, _tokenId); Transfer(_from, _to, _tokenId); }
+function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId) { safeTransferFrom(_from, _to, _tokenId, ""); }
+function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) public canTransfer(_tokenId) { transferFrom(_from, _to, _tokenId); require(checkAndCallSafeTransfer(_from, _to, _tokenId, _data)); }
+function isApprovedOrOwner(address _spender, uint256 _tokenId) internal view returns (bool) { address owner = ownerOf(_tokenId); return _spender == owner || getApproved(_tokenId) == _spender || isApprovedForAll(owner, _spender); }
+function _mint(address _to, uint256 _tokenId) internal { require(_to != address(0)); addTokenTo(_to, _tokenId); Transfer(address(0), _to, _tokenId); }
+function _burn(address _owner, uint256 _tokenId) internal { clearApproval(_owner, _tokenId); removeTokenFrom(_owner, _tokenId); Transfer(_owner, address(0), _tokenId); }
+function clearApproval(address _owner, uint256 _tokenId) internal { require(ownerOf(_tokenId) == _owner); if (tokenApprovals[_tokenId] != address(0)) { tokenApprovals[_tokenId] = address(0); Approval(_owner, address(0), _tokenId); } }
+function addTokenTo(address _to, uint256 _tokenId) internal { require(tokenOwner[_tokenId] == address(0)); tokenOwner[_tokenId] = _to; ownedTokensCount[_to] = ownedTokensCount[_to].add(1); }
+function removeTokenFrom(address _from, uint256 _tokenId) internal { require(ownerOf(_tokenId) == _from); ownedTokensCount[_from] = ownedTokensCount[_from].sub(1); tokenOwner[_tokenId] = address(0); }
+function checkAndCallSafeTransfer(address _from, address _to, uint256 _tokenId, bytes _data) internal returns (bool) { if (!_to.isContract()) { return true; } bytes4 retval = ERC721Receiver(_to).onERC721Received(_from, _tokenId, _data); return (retval == ERC721_RECEIVED); }
+function onERC721Received(address _from, uint256 _tokenId, bytes _data) public returns(bytes4);
+function ERC721Token(string _name, string _symbol) public { name_ = _name; symbol_ = _symbol; }
+function name() public view returns (string) { return name_; }
+function symbol() public view returns (string) { return symbol_; }
+function tokenURI(uint256 _tokenId) public view returns (string) { require(exists(_tokenId)); return tokenURIs[_tokenId]; }
+function _setTokenURI(uint256 _tokenId, string _uri) internal { require(exists(_tokenId)); tokenURIs[_tokenId] = _uri; }
+function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256) { require(_index < balanceOf(_owner)); return ownedTokens[_owner][_index]; }
+function totalSupply() public view returns (uint256) { return allTokens.length; }
+function tokenByIndex(uint256 _index) public view returns (uint256) { require(_index < totalSupply()); return allTokens[_index]; }
+function addTokenTo(address _to, uint256 _tokenId) internal { super.addTokenTo(_to, _tokenId); uint256 length = ownedTokens[_to].length; ownedTokens[_to].push(_tokenId); ownedTokensIndex[_tokenId] = length; }
+function removeTokenFrom(address _from, uint256 _tokenId) internal { super.removeTokenFrom(_from, _tokenId); uint256 tokenIndex = ownedTokensIndex[_tokenId]; uint256 lastTokenIndex = ownedTokens[_from].length.sub(1); uint256 lastToken = ownedTokens[_from][lastTokenIndex]; ownedTokens[_from][tokenIndex] = lastToken; ownedTokens[_from][lastTokenIndex] = 0; ownedTokens[_from].length--; ownedTokensIndex[_tokenId] = 0; ownedTokensIndex[lastToken] = tokenIndex; }
+function _mint(address _to, uint256 _tokenId) internal { super._mint(_to, _tokenId); allTokensIndex[_tokenId] = allTokens.length; allTokens.push(_tokenId); }
+function _burn(address _owner, uint256 _tokenId) internal { super._burn(_owner, _tokenId); if (bytes(tokenURIs[_tokenId]).length != 0) { delete tokenURIs[_tokenId]; } uint256 tokenIndex = allTokensIndex[_tokenId]; uint256 lastTokenIndex = allTokens.length.sub(1); uint256 lastToken = allTokens[lastTokenIndex]; allTokens[tokenIndex] = lastToken; allTokens[lastTokenIndex] = 0; allTokens.length--; allTokensIndex[_tokenId] = 0; allTokensIndex[lastToken] = tokenIndex; }
+function Ownable() public { owner = msg.sender; }
+modifier onlyOwner() { require(msg.sender == owner); _; }
+function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); emit OwnershipTransferred(owner, newOwner); owner = newOwner; }
+function mul(uint256 a, uint256 b) internal pure returns (uint256 c) { if (a == 0) { return 0; } c = a * b; assert(c / a == b); return c; }
+function div(uint256 a, uint256 b) internal pure returns (uint256) { return a / b; }
+function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+function add(uint256 a, uint256 b) internal pure returns (uint256 c) { c = a + b; assert(c >= a); return c; }
+function totalSupply() public view returns (uint256) { return totalSupply_; }
+function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); emit Transfer(msg.sender, _to, _value); return true; }
+function balanceOf(address _owner) public view returns (uint256) { return balances[_owner]; }
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[_from]); require(_value <= allowed[_from][msg.sender]); balances[_from] = balances[_from].sub(_value); balances[_to] = balances[_to].add(_value); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); emit Transfer(_from, _to, _value); return true; }
+function approve(address _spender, uint256 _value) public returns (bool) { allowed[msg.sender][_spender] = _value; emit Approval(msg.sender, _spender, _value); return true; }
+function allowance(address _owner, address _spender) public view returns (uint256) { return allowed[_owner][_spender]; }
+function increaseApproval(address _spender, uint _addedValue) public returns (bool) { allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue); emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+function decreaseApproval(address _spender, uint _subtractedValue) public returns (bool) { uint oldValue = allowed[msg.sender][_spender]; if (_subtractedValue > oldValue) { allowed[msg.sender][_spender] = 0; } else { allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue); } emit Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+function burn(uint256 _value) public { _burn(msg.sender, _value); }
+function burnFrom(address _from, uint256 _value) public { require(_value <= allowed[_from][msg.sender]); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); _burn(_from, _value); }
+function TutorialToken(address _WalletHolder) public { require(_WalletHolder != address(0)); WalletHolder = _WalletHolder; totalSupply_ = INITIAL_SUPPLY; balances[WalletHolder] = INITIAL_SUPPLY; emit Transfer(address(this), msg.sender, INITIAL_SUPPLY); }
+function () public payable { revert(); }
+modifier onlyPayloadSize(uint size) { if(msg.data.length < size + 4) { throw; } _; }
+function transfer(address _to, uint _value) onlyPayloadSize(2 * 32) { if (_to == address(0)) { throw; } balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); Transfer(msg.sender, _to, _value); }
+function balanceOf(address _owner) constant returns (uint balance) { return balances[_owner]; }
+function transferFrom(address _from, address _to, uint _value) onlyPayloadSize(3 * 32) { if(_to == address(0)) { throw; } var _allowance = allowed[_from][msg.sender]; balances[_to] = balances[_to].add(_value); balances[_from] = balances[_from].sub(_value); allowed[_from][msg.sender] = _allowance.sub(_value); Transfer(_from, _to, _value); }
+function approve(address _spender, uint _value) { if ((_value != 0) && (allowed[msg.sender][_spender] != 0)) throw; allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); }
+function allowance(address _owner, address _spender) constant returns (uint remaining) { return allowed[_owner][_spender]; }
+function Ownable() { owner = msg.sender; }
+modifier onlyOwner() { if (msg.sender != owner) { throw; } _; }
+function transferOwnership(address newOwner) onlyOwner { if (newOwner != address(0)) { owner = newOwner; } }
+modifier whenNotPaused() { if (paused) throw; _; }
+modifier whenPaused { if (!paused) throw; _; }
+function pause() onlyOwner whenNotPaused returns (bool) { paused = true; Pause(); return true; }
+function unpause() onlyOwner whenPaused returns (bool) { paused = false; Unpause(); return true; }
+function approveFor (address sender, address relayer, address spender, uint256 amount, uint256 expires, uint256 nonce, bytes memory signature) public returns (bool) { EIP712Approve memory approve = EIP712Approve(sender, relayer, spender, amount, expires, nonce); require(verify(sender, approve, signature), "INVALID_SIGNATURE"); require( (relayer == address(0x0)) || (!XBRTypes.isContract(relayer) && msg.sender == relayer) || (XBRTypes.isContract(relayer) && msg.sender == IXBRTokenRelayInterface(relayer).getRelayAuthority()), "INVALID_RELAYER" ); require(block.number < expires || expires == 0, "SIGNATURE_EXPIRED"); bytes32 digest = hash(approve); require(burnedSignatures[digest] == 0x0, "SIGNATURE_REUSED"); burnedSignatures[digest] = 0x1; _approve(sender, spender, amount); return true; }
+function burnSignature (address sender, address relayer, address spender, uint256 amount, uint256 expires, uint256 nonce, bytes memory signature) public returns (bool success) { EIP712Approve memory approve = EIP712Approve(sender, relayer, spender, amount, expires, nonce); require(verify(sender, approve, signature), "INVALID_SIGNATURE"); require(sender == msg.sender); bytes32 digest = hash(approve); require(burnedSignatures[digest] == 0x0, "SIGNATURE_REUSED"); burnedSignatures[digest] = 0x2; return true; }
+function Ownable() public { owner = msg.sender; }
+modifier onlyOwner() { require(msg.sender == owner); _; }
+function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+function Authorizable() public { AuthorizationSet(msg.sender, true); authorized[msg.sender] = true; }
+modifier onlyAuthorized() { require(authorized[msg.sender]); _; }
+function setAuthorized(address addressAuthorized, bool authorization) public onlyOwner { require(authorized[addressAuthorized] != authorization); AuthorizationSet(addressAuthorized, authorization); authorized[addressAuthorized] = authorization; }
+function WhiteList() public { WhiteListSet(msg.sender, true); whiteListed[msg.sender] = true; }
+modifier onlyWhiteListed() { require(whiteListed[msg.sender]); _; }
+function setWhiteListed(address addressWhiteListed, bool whiteListStatus) public onlyAuthorized { require(whiteListed[addressWhiteListed] != whiteListStatus); WhiteListSet(addressWhiteListed, whiteListStatus); whiteListed[addressWhiteListed] = whiteListStatus; }
+function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); Transfer(msg.sender, _to, _value); return true; }
+function balanceOf(address _owner) public view returns (uint256 balance) { return balances[_owner]; }
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[_from]); require(_value <= allowed[_from][msg.sender]); balances[_from] = balances[_from].sub(_value); balances[_to] = balances[_to].add(_value); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); Transfer(_from, _to, _value); return true; }
+function approve(address _spender, uint256 _value) public returns (bool) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; }
+function allowance(address _owner, address _spender) public view returns (uint256 remaining) { return allowed[_owner][_spender]; }
+function increaseApproval (address _spender, uint _addedValue) public returns (bool success) { allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue); Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+function setAirDropDestination(address _destination) external { require(_destination != msg.sender); addHoldersList(_destination); airDropDestinations[msg.sender] = _destination; SetDestination(msg.sender, _destination); }
+function setAirDropDestinationAndApprove(address _destination, address _spender, uint _value) external { require(_destination != msg.sender); addHoldersList(_destination); allowed[msg.sender][_spender] = _value; airDropDestinations[msg.sender] = _destination; Approval(msg.sender, _spender, _value); SetDestination(msg.sender, _destination); }
+function transfer(address _to, uint256 _value) public returns (bool) { require(super.transfer(_to, _value)); addHoldersList(_to); return true; }
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(super.transferFrom(_from, _to, _value)); addHoldersList(_to); return true; }
+function multiTransfer(address[] _address, uint[] _value) public returns (bool) { for (uint i = 0; i < _address.length; i++) { transfer(_address[i], _value[i]); } return true; }
+function airDrop(uint _value, uint _minimum, uint _maximum, uint _txFee) external onlyOwner { uint sumTotal = 0; uint i; uint[] memory airdropAmount = new uint[](holdersList.length); for (i = 0; i < holdersList.length; i++) { bool validUser = holdersList[i] != owner && !isTreasureBox[holdersList[i]]; bool qualifiedUser = balances[holdersList[i]] <= _maximum && (balances[holdersList[i]] >= _minimum || isAnExchanger[airDropDestinations[holdersList[i]]] || isAnExchanger[holdersList[i]]); if ( validUser && qualifiedUser ) { sumTotal = sumTotal.add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum and set destinatios && who have set destinations to exchanger and have tokens <= _maximum airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]] = airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]].add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum && exchanger and token <= _maximum airdropAmount[i] = airdropAmount[i].add(balances[holdersList[i]]); } } } for (i = 0; i < holdersList.length; i++) { if (airdropAmount[i] > 0) { if (_value.mul(airdropAmount[i]).div(sumTotal) > _txFee) { uint tokens = _value.mul(airdropAmount[i]).div(sumTotal).sub(_txFee); balances[owner] = balances[owner].sub(tokens); balances[holdersList[i]] = balances[holdersList[i]].add(tokens);  AirDrop(owner, holder, tokens); } } } }
+function burn(uint _amount) external onlyOwner { require(balances[owner] >= _amount); balances[owner] = balances[owner] - _amount; totalSupply = totalSupply - _amount; Transfer(owner, address(0x0), _amount); }
+function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(available()); remain = remain.sub(_tokens); token.transferFrom(owner, _recipient, _tokens); TokenSold(_recipient, _tokens); }
+function increaseHardCap(uint _amount) external onlyOwner { hardCap = hardCap.add(_amount); remain = remain.add(_amount); IncreaseHardCap(_amount); }

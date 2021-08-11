@@ -8,7 +8,7 @@ _keyparam = "&apikey="
 _fold = os.getcwd() + os.sep + 'reader_getter_data'
 
 
-def get_source_code_from_bigquery_csv(filename, key, extension):
+def get_source_code_from_csv(filename, key, extension):
     global _fold
     address_list = []
     line_count = 0

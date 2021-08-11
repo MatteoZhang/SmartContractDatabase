@@ -66,6 +66,7 @@ class CommentSeparator:
                     comment_present = False
                     tmp_code = ''
                     tmp_comment = ''
+
                     round_braces_s = self.test_lines[i].count('(')
                     round_braces_e = self.test_lines[i].count(')')
                     round_code_length = self.code_length(round_braces_s, round_braces_e, '(', ')', i)
@@ -87,7 +88,7 @@ class CommentSeparator:
                         comment_present = True
 
                     # comment inside code
-                    # tmp_comment = self.comment_inside(self.test_lines[i:i + r + sub_code_length + 1])
+                    tmp_comment = self.comment_inside(self.test_lines[i:i + r + sub_code_length + 1])
                     tmp_code = self.code_inside(self.test_lines[i:i + r + sub_code_length + 1])
 
                     # comment above code
@@ -127,6 +128,7 @@ class CommentSeparator:
 
     # we need matching codes and comments
     def write_comments(self):
+
         return self.comment
 
     def write_codes(self):
@@ -175,8 +177,8 @@ def main():
                         comments = separator.write_comments()
                         codes = separator.write_codes()
                         # if we need only functions
-                        # extractor = Extractor(lines, contract)
-                        # extractor.extract()
+                        extractor = Extractor(lines, contract)
+                        extractor.extract()
                     lines.clear()
                 file_num += 1
             else:
@@ -254,6 +256,7 @@ class Extractor:
                     tmp_code = self.code_inside(self.test_lines[i:i + r + sub_code_length + 1])
                     if tmp_code != '':
                         self.codes.append(tmp_code + '\n')
+
             except Exception as e:
                 print(e)
 

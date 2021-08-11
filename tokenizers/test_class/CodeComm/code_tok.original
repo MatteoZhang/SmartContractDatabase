@@ -1,0 +1,190 @@
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a + b ; require ( c > a , " Safe Math : addition overflow " ) ; return c ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { return sub ( a , b , " Safe Math : subtraction overflow " ) ; }
+function sub ( uint256 a , uint256 b , string memory error Message ) internal pure returns ( uint256 ) { require ( b < a , error Message ) ; uint256 c a b ; return c ; }
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { if ( a 0 ) { return 0 ; } uint256 c a b ; require ( c a b , " Safe Math : multiplication overflow " ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { return div ( a , b , " Safe Math : division by zero " ) ; }
+function div ( uint256 a , uint256 b , string memory error Message ) internal pure returns ( uint256 ) { require ( b > 0 , error Message ) ; uint256 c a b ; return c ; }
+function mod ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { return mod ( a , b , " Safe Math : modulo by zero " ) ; }
+function mod ( uint256 a , uint256 b , string memory error Message ) internal pure returns ( uint256 ) { require ( b ! 0 , error Message ) ; return a % b ; }
+function total Supply ( ) external view returns ( uint256 ) ;
+function balance Of ( address account ) external view returns ( uint256 ) ;
+function transfer ( address recipient , uint256 amount ) external returns ( bool ) ;
+function allowance ( address owner , address spender ) external view returns ( uint256 ) ;
+function approve ( address spender , uint256 amount ) external returns ( bool ) ;
+function transfer From ( address sender , address recipient , uint256 amount ) external returns ( bool ) ;
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+event Ownership Transfer Authorization ( address indexed authorized Address ) ;
+event Owner Update ( address indexed old Value , address indexed new Value ) ;
+function owner ( ) public view returns ( address ) { return owner ; }
+function authorized New Owner ( ) public view returns ( address ) { return authorized New Owner ; }
+function authorize Ownership Transfer ( address authorized Address ) external { require ( msg . sender owner , " Invalid sender " ) ; authorized New Owner authorized Address ; emit Ownership Transfer Authorization ( authorized New Owner ) ; }
+function assume Ownership ( ) external { require ( msg . sender authorized New Owner , " Invalid sender " ) ; address old Value owner ; owner authorized New Owner ; authorized New Owner address ( 0 ) ; emit Owner Update ( old Value , owner ) ; }
+function set Interface ( string memory interface Label ) internal { interface Hashes [ keccak256 ( abi . encode Packed ( interface Label ) ) ] true ; }
+function can Transfer (
+function tokens To Transfer (
+function can Receive (
+function tokens Received (
+function get Destination Partition ( bytes memory data , bytes32 fallback Partition )
+function get Partition Prefix ( bytes32 partition ) internal pure returns ( bytes4 ) { return bytes4 ( partition ) ; }
+function split Partition ( bytes32 partition )
+function get Partition Strategy Validator I Name ( bytes4 prefix )
+event Transfer By Partition (
+event Changed Partition (
+event Approval By Partition (
+event Authorized Operator ( address indexed operator , address indexed token Holder ) ;
+event Revoked Operator ( address indexed operator , address indexed token Holder ) ;
+event Authorized Operator By Partition (
+event Revoked Operator By Partition (
+event Collateral Manager Registered ( address collateral Manager ) ;
+event Partition Strategy Set ( bytes4 flag , string name , address indexed implementation ) ;
+event Minted ( address indexed operator , address indexed to , uint256 value , bytes data ) ;
+event Swap ( address indexed operator , address indexed from , uint256 value ) ;
+function total Supply ( ) external override view returns ( uint256 ) { return total Supply ; }
+function balance Of ( address token Holder ) external override view returns ( uint256 ) { return balances [ token Holder ] ; }
+function transfer ( address to , uint256 value ) external override returns ( bool ) { transfer By Default Partition ( msg . sender , msg . sender , to , value , " " ) ; return true ; }
+function transfer From (
+function allowance ( address owner , address spender )
+function approve ( address spender , uint256 value ) external override returns ( bool ) { approve By Partition ( default Partition , msg . sender , spender , value ) ; return true ; }
+function increase Allowance ( address spender , uint256 added Value )
+function decrease Allowance ( address spender , uint256 subtracted Value )
+function swap ( address from ) public { uint256 amount swap Token . allowance ( from , address ( this ) ) ; require ( amount > 0 , EC 53 INSUFFICIENT ALLOWANCE ) ; require ( swap Token . transfer From ( from , swap Token Graveyard , amount ) , EC 60 SWAP TRANSFER FAILURE ) ; mint ( msg . sender , from , amount ) ; emit Swap ( msg . sender , from , amount ) ; }
+function balance Of By Partition ( bytes32 partition , address token Holder )
+function partitions Of ( address token Holder ) external view returns ( bytes32 [ ] memory ) { return partitions Of [ token Holder ] ; }
+function transfer By Partition (
+function authorize Operator ( address operator ) external { require ( operator ! msg . sender , EC 58 INVALID OPERATOR ) ; authorized Operator [ msg . sender ] [ operator ] true ; emit Authorized Operator ( operator , msg . sender ) ; }
+function revoke Operator ( address operator ) external { require ( operator ! msg . sender , EC 58 INVALID OPERATOR ) ; authorized Operator [ msg . sender ] [ operator ] false ; emit Revoked Operator ( operator , msg . sender ) ; }
+function authorize Operator By Partition ( bytes32 partition , address operator )
+function revoke Operator By Partition ( bytes32 partition , address operator ) external { require ( operator ! msg . sender , EC 58 INVALID OPERATOR ) ; authorized Operator By Partition [ msg . sender ] [ partition ] [ operator ] false ; emit Revoked Operator By Partition ( partition , operator , msg . sender ) ; }
+function is Operator ( address operator , address token Holder )
+function is Operator For Partition (
+function is Operator For Collateral Manager (
+function name ( ) external view returns ( string memory ) { return name ; }
+function symbol ( ) external view returns ( string memory ) { return symbol ; }
+function decimals ( ) external pure returns ( uint8 ) { return uint8 ( 18 ) ; }
+function total Partitions ( ) external view returns ( bytes32 [ ] memory ) { return total Partitions ; }
+function allowance By Partition (
+function approve By Partition (
+function increase Allowance By Partition (
+function decrease Allowance By Partition (
+function register Collateral Manager ( ) external { require ( ! is Collateral Manager [ msg . sender ] , EC 5C ADDRESS CONFLICT ) ; collateral Managers . push ( msg . sender ) ; is Collateral Manager [ msg . sender ] true ; emit Collateral Manager Registered ( msg . sender ) ; }
+function is Collateral Manager ( address collateral Manager )
+function set Partition Strategy ( bytes4 prefix , address implementation ) external { require ( msg . sender owner ( ) , EC 56 INVALID SENDER ) ; require ( ! is Partition Strategy [ prefix ] , EC 5E PARTITION PREFIX CONFLICT ) ; require ( prefix ! ZERO PREFIX , EC 5F INVALID PARTITION PREFIX 0 ) ; string memory iname Partition Utils . get Partition Strategy Validator I Name ( prefix ) ; ERC1820Client . set Interface Implementation ( iname , implementation ) ; partition Strategies . push ( prefix ) ; is Partition Strategy [ prefix ] true ; emit Partition Strategy Set ( prefix , iname , implementation ) ; }
+function is Partition Strategy ( bytes4 prefix ) external view returns ( bool ) { return is Partition Strategy [ prefix ] ; }
+function transfer By Partition (
+function transfer By Default Partition (
+function remove Token From Partition (
+function add Token To Partition (
+function add Partition To Total Partitions ( bytes32 partition ) internal { total Partitions . push ( partition ) ; index Of Total Partitions [ partition ] total Partitions . length ; }
+function remove Partition From Total Partitions ( bytes32 partition ) internal { uint256 index index Of Total Partitions [ partition ] ; if ( index 0 ) { return ; } bytes32 last Value total Partitions [ total Partitions . length 1 ] ; adjust for 1 based indexing index Of Total Partitions [ last Value ] index ; total Partitions . pop ( ) ; index Of Total Partitions [ partition ] 0 ; }
+function call Pre Transfer Hooks (
+function call Post Transfer Hooks (
+function approve By Partition (
+function is Operator ( address operator , address token Holder )
+function is Operator For Partition (
+function call Partition Strategy Operator Hook (
+function mint (
+function total Supply ( ) constant returns ( uint256 supply ) { }
+function balance Of ( address owner ) constant returns ( uint256 balance ) { }
+function transfer ( address to , uint256 value ) returns ( bool success ) { }
+function transfer From ( address from , address to , uint256 value ) returns ( bool success ) { }
+function approve ( address spender , uint256 value ) returns ( bool success ) { }
+function allowance ( address owner , address spender ) constant returns ( uint256 remaining ) { }
+function is Contract ( address addr ) internal view returns ( bool ) { uint256 size ; assembly { size : extcodesize ( addr ) } return size > 0 ; }
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { if ( a 0 ) { return 0 ; } uint256 c a b ; assert ( c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a b ; return c ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a + b ; assert ( c > a ) ; return c ; }
+function Ownable ( ) public { owner msg . sender ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+modifier only Owner Of ( uint256 token Id ) { require ( owner Of ( token Id ) msg . sender ) ; ; }
+modifier can Transfer ( uint256 token Id ) { require ( is Approved Or Owner ( msg . sender , token Id ) ) ; ; }
+function balance Of ( address owner ) public view returns ( uint256 ) { require ( owner ! address ( 0 ) ) ; return owned Tokens Count [ owner ] ; }
+function owner Of ( uint256 token Id ) public view returns ( address ) { address owner token Owner [ token Id ] ; require ( owner ! address ( 0 ) ) ; return owner ; }
+function exists ( uint256 token Id ) public view returns ( bool ) { address owner token Owner [ token Id ] ; return owner ! address ( 0 ) ; }
+function approve ( address to , uint256 token Id ) public { address owner owner Of ( token Id ) ; require ( to ! owner ) ; require ( msg . sender owner | | is Approved For All ( owner , msg . sender ) ) ; if ( get Approved ( token Id ) ! address ( 0 ) | | to ! address ( 0 ) ) { token Approvals [ token Id ] to ; Approval ( owner , to , token Id ) ; } }
+function get Approved ( uint256 token Id ) public view returns ( address ) { return token Approvals [ token Id ] ; }
+function set Approval For All ( address to , bool approved ) public { require ( to ! msg . sender ) ; operator Approvals [ msg . sender ] [ to ] approved ; Approval For All ( msg . sender , to , approved ) ; }
+function is Approved For All ( address owner , address operator ) public view returns ( bool ) { return operator Approvals [ owner ] [ operator ] ; }
+function transfer From ( address from , address to , uint256 token Id ) public can Transfer ( token Id ) { require ( from ! address ( 0 ) ) ; require ( to ! address ( 0 ) ) ; clear Approval ( from , token Id ) ; remove Token From ( from , token Id ) ; add Token To ( to , token Id ) ; Transfer ( from , to , token Id ) ; }
+function safe Transfer From ( address from , address to , uint256 token Id ) public can Transfer ( token Id ) { safe Transfer From ( from , to , token Id , " " ) ; }
+function safe Transfer From ( address from , address to , uint256 token Id , bytes data ) public can Transfer ( token Id ) { transfer From ( from , to , token Id ) ; require ( check And Call Safe Transfer ( from , to , token Id , data ) ) ; }
+function is Approved Or Owner ( address spender , uint256 token Id ) internal view returns ( bool ) { address owner owner Of ( token Id ) ; return spender owner | | get Approved ( token Id ) spender | | is Approved For All ( owner , spender ) ; }
+function mint ( address to , uint256 token Id ) internal { require ( to ! address ( 0 ) ) ; add Token To ( to , token Id ) ; Transfer ( address ( 0 ) , to , token Id ) ; }
+function burn ( address owner , uint256 token Id ) internal { clear Approval ( owner , token Id ) ; remove Token From ( owner , token Id ) ; Transfer ( owner , address ( 0 ) , token Id ) ; }
+function clear Approval ( address owner , uint256 token Id ) internal { require ( owner Of ( token Id ) owner ) ; if ( token Approvals [ token Id ] ! address ( 0 ) ) { token Approvals [ token Id ] address ( 0 ) ; Approval ( owner , address ( 0 ) , token Id ) ; } }
+function add Token To ( address to , uint256 token Id ) internal { require ( token Owner [ token Id ] address ( 0 ) ) ; token Owner [ token Id ] to ; owned Tokens Count [ to ] owned Tokens Count [ to ] . add ( 1 ) ; }
+function remove Token From ( address from , uint256 token Id ) internal { require ( owner Of ( token Id ) from ) ; owned Tokens Count [ from ] owned Tokens Count [ from ] . sub ( 1 ) ; token Owner [ token Id ] address ( 0 ) ; }
+function check And Call Safe Transfer ( address from , address to , uint256 token Id , bytes data ) internal returns ( bool ) { if ( ! to . is Contract ( ) ) { return true ; } bytes4 retval ERC721Receiver ( to ) . on ERC721Received ( from , token Id , data ) ; return ( retval ERC721 RECEIVED ) ; }
+function on ERC721Received ( address from , uint256 token Id , bytes data ) public returns ( bytes4 ) ;
+function ERC721Token ( string name , string symbol ) public { name name ; symbol symbol ; }
+function name ( ) public view returns ( string ) { return name ; }
+function symbol ( ) public view returns ( string ) { return symbol ; }
+function token URI ( uint256 token Id ) public view returns ( string ) { require ( exists ( token Id ) ) ; return token UR Is [ token Id ] ; }
+function set Token URI ( uint256 token Id , string uri ) internal { require ( exists ( token Id ) ) ; token UR Is [ token Id ] uri ; }
+function token Of Owner By Index ( address owner , uint256 index ) public view returns ( uint256 ) { require ( index < balance Of ( owner ) ) ; return owned Tokens [ owner ] [ index ] ; }
+function total Supply ( ) public view returns ( uint256 ) { return all Tokens . length ; }
+function token By Index ( uint256 index ) public view returns ( uint256 ) { require ( index < total Supply ( ) ) ; return all Tokens [ index ] ; }
+function add Token To ( address to , uint256 token Id ) internal { super . add Token To ( to , token Id ) ; uint256 length owned Tokens [ to ] . length ; owned Tokens [ to ] . push ( token Id ) ; owned Tokens Index [ token Id ] length ; }
+function remove Token From ( address from , uint256 token Id ) internal { super . remove Token From ( from , token Id ) ; uint256 token Index owned Tokens Index [ token Id ] ; uint256 last Token Index owned Tokens [ from ] . length . sub ( 1 ) ; uint256 last Token owned Tokens [ from ] [ last Token Index ] ; owned Tokens [ from ] [ token Index ] last Token ; owned Tokens [ from ] [ last Token Index ] 0 ; owned Tokens [ from ] . length ; owned Tokens Index [ token Id ] 0 ; owned Tokens Index [ last Token ] token Index ; }
+function mint ( address to , uint256 token Id ) internal { super . mint ( to , token Id ) ; all Tokens Index [ token Id ] all Tokens . length ; all Tokens . push ( token Id ) ; }
+function burn ( address owner , uint256 token Id ) internal { super . burn ( owner , token Id ) ; if ( bytes ( token UR Is [ token Id ] ) . length ! 0 ) { delete token UR Is [ token Id ] ; } uint256 token Index all Tokens Index [ token Id ] ; uint256 last Token Index all Tokens . length . sub ( 1 ) ; uint256 last Token all Tokens [ last Token Index ] ; all Tokens [ token Index ] last Token ; all Tokens [ last Token Index ] 0 ; all Tokens . length ; all Tokens Index [ token Id ] 0 ; all Tokens Index [ last Token ] token Index ; }
+function Ownable ( ) public { owner msg . sender ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; emit Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 c ) { if ( a 0 ) { return 0 ; } c a b ; assert ( c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { return a b ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 c ) { c a + b ; assert ( c > a ) ; return c ; }
+function total Supply ( ) public view returns ( uint256 ) { return total Supply ; }
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ msg . sender ] ) ; balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; emit Transfer ( msg . sender , to , value ) ; return true ; }
+function balance Of ( address owner ) public view returns ( uint256 ) { return balances [ owner ] ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ from ] ) ; require ( value < allowed [ from ] [ msg . sender ] ) ; balances [ from ] balances [ from ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( value ) ; emit Transfer ( from , to , value ) ; return true ; }
+function approve ( address spender , uint256 value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] value ; emit Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) public view returns ( uint256 ) { return allowed [ owner ] [ spender ] ; }
+function increase Approval ( address spender , uint added Value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] allowed [ msg . sender ] [ spender ] . add ( added Value ) ; emit Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function decrease Approval ( address spender , uint subtracted Value ) public returns ( bool ) { uint old Value allowed [ msg . sender ] [ spender ] ; if ( subtracted Value > old Value ) { allowed [ msg . sender ] [ spender ] 0 ; } else { allowed [ msg . sender ] [ spender ] old Value . sub ( subtracted Value ) ; } emit Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function burn ( uint256 value ) public { burn ( msg . sender , value ) ; }
+function burn From ( address from , uint256 value ) public { require ( value < allowed [ from ] [ msg . sender ] ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( value ) ; burn ( from , value ) ; }
+function Tutorial Token ( address Wallet Holder ) public { require ( Wallet Holder ! address ( 0 ) ) ; Wallet Holder Wallet Holder ; total Supply INITIAL SUPPLY ; balances [ Wallet Holder ] INITIAL SUPPLY ; emit Transfer ( address ( this ) , msg . sender , INITIAL SUPPLY ) ; }
+function ( ) public payable { revert ( ) ; }
+modifier only Payload Size ( uint size ) { if ( msg . data . length < size + 4 ) { throw ; } ; }
+function transfer ( address to , uint value ) only Payload Size ( 2 32 ) { if ( to address ( 0 ) ) { throw ; } balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; Transfer ( msg . sender , to , value ) ; }
+function balance Of ( address owner ) constant returns ( uint balance ) { return balances [ owner ] ; }
+function transfer From ( address from , address to , uint value ) only Payload Size ( 3 32 ) { if ( to address ( 0 ) ) { throw ; } var allowance allowed [ from ] [ msg . sender ] ; balances [ to ] balances [ to ] . add ( value ) ; balances [ from ] balances [ from ] . sub ( value ) ; allowed [ from ] [ msg . sender ] allowance . sub ( value ) ; Transfer ( from , to , value ) ; }
+function approve ( address spender , uint value ) { if ( ( value ! 0 ) & & ( allowed [ msg . sender ] [ spender ] ! 0 ) ) throw ; allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; }
+function allowance ( address owner , address spender ) constant returns ( uint remaining ) { return allowed [ owner ] [ spender ] ; }
+function Ownable ( ) { owner msg . sender ; }
+modifier only Owner ( ) { if ( msg . sender ! owner ) { throw ; } ; }
+function transfer Ownership ( address new Owner ) only Owner { if ( new Owner ! address ( 0 ) ) { owner new Owner ; } }
+modifier when Not Paused ( ) { if ( paused ) throw ; ; }
+modifier when Paused { if ( ! paused ) throw ; ; }
+function pause ( ) only Owner when Not Paused returns ( bool ) { paused true ; Pause ( ) ; return true ; }
+function unpause ( ) only Owner when Paused returns ( bool ) { paused false ; Unpause ( ) ; return true ; }
+function approve For ( address sender , address relayer , address spender , uint256 amount , uint256 expires ,
+function burn Signature ( address sender , address relayer , address spender , uint256 amount , uint256 expires ,
+function Ownable ( ) public { owner msg . sender ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+function Authorizable ( ) public { Authorization Set ( msg . sender , true ) ; authorized [ msg . sender ] true ; }
+modifier only Authorized ( ) { require ( authorized [ msg . sender ] ) ; ; }
+function set Authorized ( address address Authorized , bool authorization ) public only Owner { require ( authorized [ address Authorized ] ! authorization ) ; Authorization Set ( address Authorized , authorization ) ; authorized [ address Authorized ] authorization ; }
+function White List ( ) public { White List Set ( msg . sender , true ) ; white Listed [ msg . sender ] true ; }
+modifier only White Listed ( ) { require ( white Listed [ msg . sender ] ) ; ; }
+function set White Listed ( address address White Listed , bool white List Status ) public only Authorized { require ( white Listed [ address White Listed ] ! white List Status ) ; White List Set ( address White Listed , white List Status ) ; white Listed [ address White Listed ] white List Status ; }
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ msg . sender ] ) ; balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; Transfer ( msg . sender , to , value ) ; return true ; }
+function balance Of ( address owner ) public view returns ( uint256 balance ) { return balances [ owner ] ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ from ] ) ; require ( value < allowed [ from ] [ msg . sender ] ) ; balances [ from ] balances [ from ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( value ) ; Transfer ( from , to , value ) ; return true ; }
+function approve ( address spender , uint256 value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) public view returns ( uint256 remaining ) { return allowed [ owner ] [ spender ] ; }
+function increase Approval ( address spender , uint added Value ) public returns ( bool success ) { allowed [ msg . sender ] [ spender ] allowed [ msg . sender ] [ spender ] . add ( added Value ) ; Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function set Air Drop Destination ( address destination ) external { require ( destination ! msg . sender ) ; add Holders List ( destination ) ; air Drop Destinations [ msg . sender ] destination ; Set Destination ( msg . sender , destination ) ; }
+function set Air Drop Destination And Approve ( address destination , address spender , uint value ) external { require ( destination ! msg . sender ) ; add Holders List ( destination ) ; allowed [ msg . sender ] [ spender ] value ; air Drop Destinations [ msg . sender ] destination ; Approval ( msg . sender , spender , value ) ; Set Destination ( msg . sender , destination ) ; }
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( super . transfer ( to , value ) ) ; add Holders List ( to ) ; return true ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( super . transfer From ( from , to , value ) ) ; add Holders List ( to ) ; return true ; }
+function multi Transfer ( address [ ] address , uint [ ] value ) public returns ( bool ) { for ( uint i 0 ; i < address . length ; i + + ) { transfer ( address [ i ] , value [ i ] ) ; } return true ; }
+function air Drop ( uint value , uint minimum , uint maximum , uint tx Fee ) external only Owner { uint sum Total 0 ; uint i ; uint [ ] memory airdrop Amount new uint [ ] ( holders List . length ) ; for ( i 0 ; i < holders List . length ; i + + ) { bool valid User holders List [ i ] ! owner & & ! is Treasure Box [ holders List [ i ] ] ; bool qualified User balances [ holders List [ i ] ] < maximum & & ( balances [ holders List [ i ] ] > minimum | | is An Exchanger [ air Drop Destinations [ holders List [ i ] ] ] | | is An Exchanger [ holders List [ i ] ] ) ; if ( valid User & & qualified User ) { sum Total sum Total . add ( balances [ holders List [ i ] ] ) ; who have tokens > minimum and < maximum and set destinatios & & who have set destinations to exchanger and have tokens < maximum airdrop Amount [ holders Index [ air Drop Destinations [ holders List [ i ] ] ] ] airdrop Amount [ holders Index [ air Drop Destinations [ holders List [ i ] ] ] ] . add ( balances [ holders List [ i ] ] ) ; who have tokens > minimum and < maximum & & exchanger and token < maximum airdrop Amount [ i ] airdrop Amount [ i ] . add ( balances [ holders List [ i ] ] ) ; } } } for ( i 0 ; i < holders List . length ; i + + ) { if ( airdrop Amount [ i ] > 0 ) { if ( value . mul ( airdrop Amount [ i ] ) . div ( sum Total ) > tx Fee ) { uint tokens value . mul ( airdrop Amount [ i ] ) . div ( sum Total ) . sub ( tx Fee ) ; balances [ owner ] balances [ owner ] . sub ( tokens ) ; balances [ holders List [ i ] ] balances [ holders List [ i ] ] . add ( tokens ) ; Air Drop ( owner , holder , tokens ) ; } } } }
+function burn ( uint amount ) external only Owner { require ( balances [ owner ] > amount ) ; balances [ owner ] balances [ owner ] amount ; total Supply total Supply amount ; Transfer ( owner , address ( 0x0 ) , amount ) ; }
+function transfer For ( address recipient , uint tokens ) external only Owner { require ( recipient ! address ( 0 ) ) ; require ( available ( ) ) ; remain remain . sub ( tokens ) ; token . transfer From ( owner , recipient , tokens ) ; Token Sold ( recipient , tokens ) ; }
+function increase Hard Cap ( uint amount ) external only Owner { hard Cap hard Cap . add ( amount ) ; remain remain . add ( amount ) ; Increase Hard Cap ( amount ) ; }

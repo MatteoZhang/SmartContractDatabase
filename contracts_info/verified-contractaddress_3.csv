@@ -1,4 +1,3 @@
-Note: For the actual contract source codes use the api endpoints at https://etherscan.io/apis#contracts
 "Txhash","ContractAddress","ContractName"
 "0x98da3c262204d7533e377ac23457dc0d6d0165454b4ba94ad1fa3e931ebda0ba","0x0c7430dea0eb732e2def7f73705672a87a3c3fde","Coin"
 "0x998ba48a547044d0a85d80c7c0d7d13cee0cadfa09cd85ee64da93d10b082160","0x672828d54d3be6f1b08591eee7df4b2d39876f7f","Address"
