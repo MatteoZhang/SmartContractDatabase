@@ -131,3 +131,11 @@ dmypy.json
 .idea/libraries/R_User_Library.xml
 .idea/encodings.xml
 *.sol
+tokenizers/CodeComm/code.original
+tokenizers/CodeComm/code_sampled.original
+tokenizers/CodeComm/code_tok.original
+tokenizers/CodeComm/doc.original
+tokenizers/CodeComm/doc_sampled.original
+tokenizers/CodeComm/doc_tok.original
+tokenizers/CodeComm/test/code_sampled.original
+tokenizers/CodeComm/test/doc_sampled.original

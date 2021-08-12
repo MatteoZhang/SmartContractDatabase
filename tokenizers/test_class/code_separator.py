@@ -230,7 +230,7 @@ class Extractor:
         """
         code = []
         for i in code_portion:
-            if i.startswith(self.single):
+            if i.startswith(self.single) or i.startswith(self.multiple_start):
                 pass
             elif self.single in i:
                 s = i.split(self.single)

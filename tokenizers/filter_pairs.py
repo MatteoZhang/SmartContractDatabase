@@ -1,10 +1,11 @@
 import random
 
-SOURCECODE = 'smart_contracts__CodeComm/code_tok.original'
-COMMENT = 'smart_contracts__CodeComm/doc_tok.original'
-OUT_SOURCE = 'smart_contracts__CodeComm/code_sampled.original'
-OUT_COMM = 'smart_contracts__CodeComm/doc_sampled.original'
-LINES = 60000
+SOURCECODE = 'CodeComm/code_tok.original'
+COMMENT = 'CodeComm/doc_tok.original'
+OUT_SOURCE = 'CodeComm/code_sampled.original'
+OUT_COMM = 'CodeComm/doc_sampled.original'
+LINES = 499000
+MaxLen = 5000
 
 
 def main():
@@ -22,9 +23,9 @@ def main():
                 # code_lines[i] not in code_sample and comm_lines[i] not in comm_sample unique pair
                 # xor same code different comm same comm different code
                 x = comm_lines[i] in comm_sample
-                y = code_lines[i] in code_sample
+                # y = code_lines[i] in code_sample
                 if not x and comm_lines[i] != '':
-                    # if comm_lines[i] != '':
+                    # if len(comm_lines[i]) < MaxLen and len(code_lines[i]) < MaxLen:
                     code_sample.append(code_lines[i])
                     comm_sample.append(comm_lines[i])
             # ======
