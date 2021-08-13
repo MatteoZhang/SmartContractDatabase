@@ -1,0 +1,15 @@
+function total Supply ( ) constant returns ( uint256 supply ) { }
+function balance Of ( address owner ) constant returns ( uint256 balance ) { }
+function transfer ( address to , uint256 value ) returns ( bool success ) { }
+function transfer From ( address from , address to , uint256 value ) returns ( bool success ) { }
+function approve ( address spender , uint256 value ) returns ( bool success ) { }
+function allowance ( address owner , address spender ) constant returns ( uint256 remaining ) { }
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+function transfer From ( address from , address to , uint256 value ) returns ( bool success ) { if ( balances [ from ] > value & & allowed [ from ] [ msg . sender ] > value & & value > 0 ) { balances [ to ] + value ; balances [ from ] value ; allowed [ from ] [ msg . sender ] value ; Transfer ( from , to , value ) ; return true ; } else { return false ; } } function balance Of ( address owner ) constant returns ( uint256 balance ) { return balances [ owner ] ; } function approve ( address spender , uint256 value ) returns ( bool success ) { allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; return true ; } function allowance ( address owner , address spender ) constant returns ( uint256 remaining ) { return allowed [ owner ] [ spender ] ; } mapping ( address > uint256 ) balances ; mapping ( address > mapping ( address > uint256 ) ) allowed ; uint256 public total Supply ; }
+function balance Of ( address owner ) constant returns ( uint256 balance ) { return balances [ owner ] ; }
+function approve ( address spender , uint256 value ) returns ( bool success ) { allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) constant returns ( uint256 remaining ) { return allowed [ owner ] [ spender ] ; }
+function ( ) { throw ; }
+function Human Standard Token ( uint256 initial Amount , string token Name , uint8 decimal Units , string token Symbol ) { Give the creator all initial tokens Update total supply Set the name for display purposes Amount of decimals for display purposes Set the symbol for display purposes }
+function approve And Call ( address spender , uint256 value , bytes extra Data ) returns ( bool success ) { allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; if ( ! spender . call ( bytes4 ( bytes32 ( sha3 ( " receive Approval ( address , uint256 , address , bytes ) " ) ) ) , msg . sender , value , this , extra Data ) ) { throw ; } return true ; }

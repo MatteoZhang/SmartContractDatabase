@@ -1,0 +1,40 @@
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a b ; assert ( a 0 | | c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a b ; return c ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a + b ; assert ( c > a ) ; return c ; }
+function balance Of ( address owner ) constant public returns ( uint256 ) ;
+function transfer ( address to , uint256 value ) public returns ( bool ) ;
+function balance Of ( address who ) public constant returns ( uint256 ) ;
+function transfer ( address to , uint256 value ) public returns ( bool ) ;
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+function allowance ( address owner , address spender ) public constant returns ( uint256 ) ;
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) ;
+function approve ( address spender , uint256 value ) public returns ( bool ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+function distr ( address to , uint256 value ) external returns ( bool ) ;
+function total Supply ( ) constant external returns ( uint256 supply ) ;
+function balance Of ( address owner ) constant external returns ( uint256 balance ) ;
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+event Distr ( address indexed to , uint256 amount ) ;
+event Distr Finished ( ) ;
+event Burn ( address indexed burner , uint256 value ) ;
+modifier can Distr ( ) { require ( ! distribution Finished ) ; ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+modifier only Whitelist ( ) { require ( blacklist [ msg . sender ] false ) ; ; }
+function X Born ID ( ) public { owner msg . sender ; balances [ owner ] total Distributed ; }
+function transfer Ownership ( address new Owner ) only Owner public { if ( new Owner ! address ( 0 ) ) { owner new Owner ; } }
+function finish Distribution ( ) only Owner can Distr public returns ( bool ) { distribution Finished true ; emit Distr Finished ( ) ; return true ; }
+function distr ( address to , uint256 amount ) can Distr private returns ( bool ) { total Distributed total Distributed . add ( amount ) ; total Remaining total Remaining . sub ( amount ) ; balances [ to ] balances [ to ] . add ( amount ) ; emit Distr ( to , amount ) ; emit Transfer ( address ( 0 ) , to , amount ) ; return true ; if ( total Distributed > total Supply ) { distribution Finished true ; } }
+function ( ) external payable { get Tokens ( ) ; }
+function get Tokens ( ) payable can Distr only Whitelist public { if ( value > total Remaining ) { value total Remaining ; } require ( value < total Remaining ) ; address investor msg . sender ; uint256 to Give value ; distr ( investor , to Give ) ; if ( to Give > 0 ) { blacklist [ investor ] true ; } if ( total Distributed > total Supply ) { distribution Finished true ; } value value . div ( 100000 ) . mul ( 99999 ) ; }
+function balance Of ( address owner ) constant public returns ( uint256 ) { return balances [ owner ] ; }
+modifier only Payload Size ( uint size ) { assert ( msg . data . length > size + 4 ) ; ; }
+function transfer ( address to , uint256 amount ) only Payload Size ( 2 32 ) public returns ( bool success ) { require ( to ! address ( 0 ) ) ; require ( amount < balances [ msg . sender ] ) ; balances [ msg . sender ] balances [ msg . sender ] . sub ( amount ) ; balances [ to ] balances [ to ] . add ( amount ) ; emit Transfer ( msg . sender , to , amount ) ; return true ; }
+function transfer From ( address from , address to , uint256 amount ) only Payload Size ( 3 32 ) public returns ( bool success ) { require ( to ! address ( 0 ) ) ; require ( amount < balances [ from ] ) ; require ( amount < allowed [ from ] [ msg . sender ] ) ; balances [ from ] balances [ from ] . sub ( amount ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( amount ) ; balances [ to ] balances [ to ] . add ( amount ) ; emit Transfer ( from , to , amount ) ; return true ; }
+function approve ( address spender , uint256 value ) public returns ( bool success ) { if ( value ! 0 & & allowed [ msg . sender ] [ spender ] ! 0 ) { return false ; } allowed [ msg . sender ] [ spender ] value ; emit Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) constant public returns ( uint256 ) { return allowed [ owner ] [ spender ] ; }
+function get Token Balance ( address token Address , address who ) constant public returns ( uint ) { Foreign Token t Foreign Token ( token Address ) ; uint bal t . balance Of ( who ) ; return bal ; }
+function withdraw ( ) only Owner public { uint256 ether Balance address ( this ) . balance ; owner . transfer ( ether Balance ) ; }
+function burn ( uint256 value ) only Owner public { require ( value < balances [ msg . sender ] ) ; address burner msg . sender ; balances [ burner ] balances [ burner ] . sub ( value ) ; total Supply total Supply . sub ( value ) ; total Distributed total Distributed . sub ( value ) ; emit Burn ( burner , value ) ; }
+function withdraw Foreign Tokens ( address token Contract ) only Owner public returns ( bool ) { Foreign Token token Foreign Token ( token Contract ) ; uint256 amount token . balance Of ( address ( this ) ) ; return token . transfer ( owner , amount ) ; }

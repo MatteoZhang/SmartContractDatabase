@@ -1,0 +1,68 @@
+function is Contract ( address addr ) internal view returns ( bool ) { uint256 size ; assembly { size : extcodesize ( addr ) } return size > 0 ; }
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { if ( a 0 ) { return 0 ; } uint256 c a b ; assert ( c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a b ; return c ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a + b ; assert ( c > a ) ; return c ; }
+event Ownership Transferred ( address indexed previous Owner , address indexed new Owner ) ;
+function Ownable ( ) public { owner msg . sender ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+event Transfer ( address indexed from , address indexed to , uint256 token Id ) ;
+event Approval ( address indexed owner , address indexed approved , uint256 token Id ) ;
+event Approval For All ( address indexed owner , address indexed operator , bool approved ) ;
+function balance Of ( address owner ) public view returns ( uint256 balance ) ;
+function owner Of ( uint256 token Id ) public view returns ( address owner ) ;
+function exists ( uint256 token Id ) public view returns ( bool exists ) ;
+function approve ( address to , uint256 token Id ) public ;
+function get Approved ( uint256 token Id ) public view returns ( address operator ) ;
+function set Approval For All ( address operator , bool approved ) public ;
+function is Approved For All ( address owner , address operator ) public view returns ( bool ) ;
+function transfer From ( address from , address to , uint256 token Id ) public ;
+function safe Transfer From ( address from , address to , uint256 token Id ) public ;
+function safe Transfer From ( address from , address to , uint256 token Id , bytes data ) public ;
+function total Supply ( ) public view returns ( uint256 ) ;
+function token Of Owner By Index ( address owner , uint256 index ) public view returns ( uint256 token Id ) ;
+function token By Index ( uint256 index ) public view returns ( uint256 ) ;
+function name ( ) public view returns ( string name ) ;
+function symbol ( ) public view returns ( string symbol ) ;
+function token URI ( uint256 token Id ) public view returns ( string ) ;
+function take Ownership ( uint256 token Id ) public ;
+function transfer ( address to , uint256 token Id ) public ;
+function tokens Of ( address owner ) public view returns ( uint256 [ ] ) ;
+modifier only Owner Of ( uint256 token Id ) { require ( owner Of ( token Id ) msg . sender ) ; ; }
+modifier can Transfer ( uint256 token Id ) { require ( is Approved Or Owner ( msg . sender , token Id ) ) ; ; }
+function balance Of ( address owner ) public view returns ( uint256 ) { require ( owner ! address ( 0 ) ) ; return owned Tokens Count [ owner ] ; }
+function owner Of ( uint256 token Id ) public view returns ( address ) { address owner token Owner [ token Id ] ; require ( owner ! address ( 0 ) ) ; return owner ; }
+function exists ( uint256 token Id ) public view returns ( bool ) { address owner token Owner [ token Id ] ; return owner ! address ( 0 ) ; }
+function approve ( address to , uint256 token Id ) public { address owner owner Of ( token Id ) ; require ( to ! owner ) ; require ( msg . sender owner | | is Approved For All ( owner , msg . sender ) ) ; if ( get Approved ( token Id ) ! address ( 0 ) | | to ! address ( 0 ) ) { token Approvals [ token Id ] to ; Approval ( owner , to , token Id ) ; } }
+function get Approved ( uint256 token Id ) public view returns ( address ) { return token Approvals [ token Id ] ; }
+function set Approval For All ( address to , bool approved ) public { require ( to ! msg . sender ) ; operator Approvals [ msg . sender ] [ to ] approved ; Approval For All ( msg . sender , to , approved ) ; }
+function is Approved For All ( address owner , address operator ) public view returns ( bool ) { return operator Approvals [ owner ] [ operator ] ; }
+function transfer From ( address from , address to , uint256 token Id ) public can Transfer ( token Id ) { require ( from ! address ( 0 ) ) ; require ( to ! address ( 0 ) ) ; clear Approval ( from , token Id ) ; remove Token From ( from , token Id ) ; add Token To ( to , token Id ) ; Transfer ( from , to , token Id ) ; }
+function safe Transfer From ( address from , address to , uint256 token Id ) public can Transfer ( token Id ) { safe Transfer From ( from , to , token Id , " " ) ; }
+function safe Transfer From ( address from , address to , uint256 token Id , bytes data ) public can Transfer ( token Id ) { transfer From ( from , to , token Id ) ; require ( check And Call Safe Transfer ( from , to , token Id , data ) ) ; }
+function is Approved Or Owner ( address spender , uint256 token Id ) internal view returns ( bool ) { address owner owner Of ( token Id ) ; return spender owner | | get Approved ( token Id ) spender | | is Approved For All ( owner , spender ) ; }
+function mint ( address to , uint256 token Id ) internal { require ( to ! address ( 0 ) ) ; add Token To ( to , token Id ) ; Transfer ( address ( 0 ) , to , token Id ) ; }
+function burn ( address owner , uint256 token Id ) internal { clear Approval ( owner , token Id ) ; remove Token From ( owner , token Id ) ; Transfer ( owner , address ( 0 ) , token Id ) ; }
+function clear Approval ( address owner , uint256 token Id ) internal { require ( owner Of ( token Id ) owner ) ; if ( token Approvals [ token Id ] ! address ( 0 ) ) { token Approvals [ token Id ] address ( 0 ) ; Approval ( owner , address ( 0 ) , token Id ) ; } }
+function add Token To ( address to , uint256 token Id ) internal { require ( token Owner [ token Id ] address ( 0 ) ) ; token Owner [ token Id ] to ; owned Tokens Count [ to ] owned Tokens Count [ to ] . add ( 1 ) ; }
+function remove Token From ( address from , uint256 token Id ) internal { require ( owner Of ( token Id ) from ) ; owned Tokens Count [ from ] owned Tokens Count [ from ] . sub ( 1 ) ; token Owner [ token Id ] address ( 0 ) ; }
+function check And Call Safe Transfer ( address from , address to , uint256 token Id , bytes data ) internal returns ( bool ) { if ( ! to . is Contract ( ) ) { return true ; } bytes4 retval ERC721Receiver ( to ) . on ERC721Received ( from , token Id , data ) ; return ( retval ERC721 RECEIVED ) ; }
+function on ERC721Received ( address from , uint256 token Id , bytes data ) public returns ( bytes4 ) ;
+function ERC721Token ( string name , string symbol ) public { name name ; symbol symbol ; }
+function name ( ) public view returns ( string ) { return name ; }
+function symbol ( ) public view returns ( string ) { return symbol ; }
+function token URI ( uint256 token Id ) public view returns ( string ) { require ( exists ( token Id ) ) ; return token UR Is [ token Id ] ; }
+function set Token URI ( uint256 token Id , string uri ) internal { require ( exists ( token Id ) ) ; token UR Is [ token Id ] uri ; }
+function token Of Owner By Index ( address owner , uint256 index ) public view returns ( uint256 ) { require ( index < balance Of ( owner ) ) ; return owned Tokens [ owner ] [ index ] ; }
+function total Supply ( ) public view returns ( uint256 ) { return all Tokens . length ; }
+function token By Index ( uint256 index ) public view returns ( uint256 ) { require ( index < total Supply ( ) ) ; return all Tokens [ index ] ; }
+function add Token To ( address to , uint256 token Id ) internal { super . add Token To ( to , token Id ) ; uint256 length owned Tokens [ to ] . length ; owned Tokens [ to ] . push ( token Id ) ; owned Tokens Index [ token Id ] length ; }
+function remove Token From ( address from , uint256 token Id ) internal { super . remove Token From ( from , token Id ) ; uint256 token Index owned Tokens Index [ token Id ] ; uint256 last Token Index owned Tokens [ from ] . length . sub ( 1 ) ; uint256 last Token owned Tokens [ from ] [ last Token Index ] ; owned Tokens [ from ] [ token Index ] last Token ; owned Tokens [ from ] [ last Token Index ] 0 ; owned Tokens [ from ] . length ; owned Tokens Index [ token Id ] 0 ; owned Tokens Index [ last Token ] token Index ; }
+function mint ( address to , uint256 token Id ) internal { super . mint ( to , token Id ) ; all Tokens Index [ token Id ] all Tokens . length ; all Tokens . push ( token Id ) ; }
+function burn ( address owner , uint256 token Id ) internal { super . burn ( owner , token Id ) ; if ( bytes ( token UR Is [ token Id ] ) . length ! 0 ) { delete token UR Is [ token Id ] ; } uint256 token Index all Tokens Index [ token Id ] ; uint256 last Token Index all Tokens . length . sub ( 1 ) ; uint256 last Token all Tokens [ last Token Index ] ; all Tokens [ token Index ] last Token ; all Tokens [ last Token Index ] 0 ; all Tokens . length ; all Tokens Index [ token Id ] 0 ; all Tokens Index [ last Token ] token Index ; }
+function Deus Token ( ) public ERC721Token ( " Deus ETH Token " , " DEUS " ) { }
+function safe Transfer From With Data ( address from , address to , uint256 token Id , bytes data ) public { return super . safe Transfer From ( from , to , token Id , data ) ; }
+function mint ( address to , uint256 token Id ) public only Owner { super . mint ( to , token Id ) ; }
+function burn ( address owner , uint256 token Id ) public only Owner { super . burn ( owner , token Id ) ; }
+function set Token URI ( uint256 token Id , string uri ) public only Owner { super . set Token URI ( token Id , uri ) ; }

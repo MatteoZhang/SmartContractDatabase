@@ -1,0 +1,73 @@
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { if ( a 0 ) { return 0 ; } uint256 c a b ; assert ( c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a b ; return c ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { uint256 c a + b ; assert ( c > a ) ; return c ; }
+event Ownership Transferred ( address indexed previous Owner , address indexed new Owner ) ;
+function Ownable ( ) public { owner msg . sender ; }
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+event Authorization Set ( address indexed address Authorized , bool indexed authorization ) ;
+function Authorizable ( ) public { Authorization Set ( msg . sender , true ) ; authorized [ msg . sender ] true ; }
+modifier only Authorized ( ) { require ( authorized [ msg . sender ] ) ; ; }
+function set Authorized ( address address Authorized , bool authorization ) public only Owner { require ( authorized [ address Authorized ] ! authorization ) ; Authorization Set ( address Authorized , authorization ) ; authorized [ address Authorized ] authorization ; }
+event White List Set ( address address White Listed , bool white List Status ) ;
+function White List ( ) public { White List Set ( msg . sender , true ) ; white Listed [ msg . sender ] true ; }
+modifier only White Listed ( ) { require ( white Listed [ msg . sender ] ) ; ; }
+function is White Listed ( address address ) public view returns ( bool ) { return white Listed [ address ] ; }
+function set White Listed ( address address White Listed , bool white List Status ) public only Authorized { require ( white Listed [ address White Listed ] ! white List Status ) ; White List Set ( address White Listed , white List Status ) ; white Listed [ address White Listed ] white List Status ; }
+function balance Of ( address who ) public view returns ( uint256 ) ;
+function transfer ( address to , uint256 value ) public returns ( bool ) ;
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+function allowance ( address owner , address spender ) public view returns ( uint256 ) ;
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) ;
+function approve ( address spender , uint256 value ) public returns ( bool ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ msg . sender ] ) ; balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; Transfer ( msg . sender , to , value ) ; return true ; }
+function balance Of ( address owner ) public view returns ( uint256 balance ) { return balances [ owner ] ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ from ] ) ; require ( value < allowed [ from ] [ msg . sender ] ) ; balances [ from ] balances [ from ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( value ) ; Transfer ( from , to , value ) ; return true ; }
+function approve ( address spender , uint256 value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) public view returns ( uint256 remaining ) { return allowed [ owner ] [ spender ] ; }
+function increase Approval ( address spender , uint added Value ) public returns ( bool success ) { allowed [ msg . sender ] [ spender ] allowed [ msg . sender ] [ spender ] . add ( added Value ) ; Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function decrease Approval ( address spender , uint subtracted Value ) public returns ( bool success ) { uint old Value allowed [ msg . sender ] [ spender ] ; if ( subtracted Value > old Value ) { allowed [ msg . sender ] [ spender ] 0 ; } else { allowed [ msg . sender ] [ spender ] old Value . sub ( subtracted Value ) ; } Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function Treasure Box ( ZMINE token , address beneficiary , uint release Time ) public { require ( beneficiary ! address ( 0 ) ) ; token token ; beneficiary beneficiary ; release Time release Time ; }
+function claim ( ) external { require ( available ( ) ) ; require ( amount ( ) > 0 ) ; token . transfer ( beneficiary , amount ( ) ) ; }
+function available ( ) public view returns ( bool ) { return ( now > release Time ) ; }
+function amount ( ) public view returns ( uint256 ) { return token . balance Of ( this ) ; }
+event Set Destination ( address address , address destination ) ;
+event Set Exchanger ( address address , bool is Exchanger ) ;
+event Air Drop ( address address , uint value ) ;
+function Air Drop Token ( ) public { held [ owner ] true ; holders List . length + + ; holders List [ holders List . length 1 ] owner ; }
+function add Holders List ( address address ) private { if ( held [ address ] false ) { held [ address ] true ; holders List . length + + ; holders List [ holders List . length 1 ] address ; holders Index [ address ] holders List . length 1 ; } }
+function set Treasure Box ( address address , bool status ) public only Authorized { require ( address ! address ( 0 ) ) ; require ( is Treasure Box [ address ] ! status ) ; is Treasure Box [ address ] status ; }
+function set Exchanger ( address address , bool is Exchanger ) external only Authorized { require ( address ! address ( 0 ) ) ; require ( is An Exchanger [ address ] ! is Exchanger ) ; add Holders List ( address ) ; is An Exchanger [ address ] is Exchanger ; Set Exchanger ( address , is Exchanger ) ; }
+function set Air Drop Destination ( address destination ) external { require ( destination ! msg . sender ) ; add Holders List ( destination ) ; air Drop Destinations [ msg . sender ] destination ; Set Destination ( msg . sender , destination ) ; }
+function set Air Drop Destination And Approve ( address destination , address spender , uint value ) external { require ( destination ! msg . sender ) ; add Holders List ( destination ) ; allowed [ msg . sender ] [ spender ] value ; air Drop Destinations [ msg . sender ] destination ; Approval ( msg . sender , spender , value ) ; Set Destination ( msg . sender , destination ) ; }
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( super . transfer ( to , value ) ) ; add Holders List ( to ) ; return true ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( super . transfer From ( from , to , value ) ) ; add Holders List ( to ) ; return true ; }
+function multi Transfer ( address [ ] address , uint [ ] value ) public returns ( bool ) { for ( uint i 0 ; i < address . length ; i + + ) { transfer ( address [ i ] , value [ i ] ) ; } return true ; }
+function air Drop ( uint value , uint minimum , uint maximum , uint tx Fee ) external only Owner { uint sum Total 0 ; uint i ; uint [ ] memory airdrop Amount new uint [ ] ( holders List . length ) ; for ( i 0 ; i < holders List . length ; i + + ) { bool valid User holders List [ i ] ! owner & & ! is Treasure Box [ holders List [ i ] ] ; bool qualified User balances [ holders List [ i ] ] < maximum & & ( balances [ holders List [ i ] ] > minimum | | is An Exchanger [ air Drop Destinations [ holders List [ i ] ] ] | | is An Exchanger [ holders List [ i ] ] ) ; if ( valid User & & qualified User ) { sum Total sum Total . add ( balances [ holders List [ i ] ] ) ; who have tokens > minimum and < maximum and set destinatios & & who have set destinations to exchanger and have tokens < maximum airdrop Amount [ holders Index [ air Drop Destinations [ holders List [ i ] ] ] ] airdrop Amount [ holders Index [ air Drop Destinations [ holders List [ i ] ] ] ] . add ( balances [ holders List [ i ] ] ) ; who have tokens > minimum and < maximum & & exchanger and token < maximum airdrop Amount [ i ] airdrop Amount [ i ] . add ( balances [ holders List [ i ] ] ) ; } } } for ( i 0 ; i < holders List . length ; i + + ) { if ( airdrop Amount [ i ] > 0 ) { if ( value . mul ( airdrop Amount [ i ] ) . div ( sum Total ) > tx Fee ) { uint tokens value . mul ( airdrop Amount [ i ] ) . div ( sum Total ) . sub ( tx Fee ) ; balances [ owner ] balances [ owner ] . sub ( tokens ) ; balances [ holders List [ i ] ] balances [ holders List [ i ] ] . add ( tokens ) ; Air Drop ( owner , holder , tokens ) ; } } } }
+function ZMINE ( ) public { balances [ owner ] total Supply ; Transfer ( address ( 0x0 ) , owner , total Supply ) ; }
+function burn ( uint amount ) external only Owner { require ( balances [ owner ] > amount ) ; balances [ owner ] balances [ owner ] amount ; total Supply total Supply amount ; Transfer ( owner , address ( 0x0 ) , amount ) ; }
+function update Rate ( uint rate ) public only Authorized { require ( rate ! rate ) ; rate rate ; }
+function get Rate ( ) public view returns ( uint ) { return rate ; }
+event Token Transfer For Founder ( address recipient , uint value , address box1 , address box2 ) ;
+function Founder Threader ( ZMINE token , address [ ] founders ) public { token ZMINE ( token ) ; for ( uint i 0 ; i < founders . length ; i + + ) { is Founder [ founders [ i ] ] true ; } }
+function transfer For ( address recipient , uint tokens ) external only Owner { require ( recipient ! address ( 0 ) ) ; require ( tokens > min Tx ) ; require ( is Founder [ recipient ] ) ; can open 2018 07 08 09 + 07 : 00 can open 2019 01 08 09 + 07 : 00 token . set Treasure Box ( box1 , true ) ; token . set Treasure Box ( box2 , true ) ; 33 % for now 33 % for box1 34 % for box2 remain remain . sub ( tokens ) ; Token Transfer For Founder ( recipient , tokens , box1 , box2 ) ; }
+event Token Sold ( address recipient , uint value , uint tokens , uint rate ) ;
+event Token Sold ( address recipient , uint tokens ) ;
+function Pre Sale ( ZMINE token , Rate Contract rate Contract , White List whitelist ) public { token ZMINE ( token ) ; rate Contract Rate Contract ( rate Contract ) ; whitelist White List ( whitelist ) ; }
+function transfer For ( address recipient , uint tokens ) external only Owner { require ( recipient ! address ( 0 ) ) ; require ( available ( ) ) ; remain remain . sub ( tokens ) ; token . transfer From ( owner , recipient , tokens ) ; Token Sold ( recipient , tokens ) ; }
+function sale ( address recipient , uint value , uint rate ) private { require ( recipient ! address ( 0 ) ) ; require ( available ( ) ) ; require ( is White Listed ( recipient ) ) ; require ( value > min Tx & & value < max Tx ) ; uint tokens rate . mul ( value ) . div ( 1 ether ) ; remain remain . sub ( tokens ) ; token . transfer From ( owner , recipient , tokens ) ; owner . transfer ( value ) ; Token Sold ( recipient , value , tokens , rate ) ; }
+function rate ( ) public view returns ( uint ) { return rate Contract . get Rate ( ) ; }
+function available ( ) public view returns ( bool ) { return ( now > start Date & & now < stop Date ) ; }
+function is White Listed ( address address ) public view returns ( bool ) { return whitelist . is White Listed ( address ) ; }
+function ( ) external payable { sale ( msg . sender , msg . value , rate ( ) ) ; }
+event Token Sold ( address recipient , uint value , uint tokens , uint rate ) ;
+event Increase Hard Cap ( uint amount ) ;
+function ICO Sale ( ZMINE token , Rate Contract rate Contract , White List whitelist PRE , White List whitelist ICO ) public { token ZMINE ( token ) ; rate Contract Rate Contract ( rate Contract ) ; whitelist PRE White List ( whitelist PRE ) ; whitelist ICO White List ( whitelist ICO ) ; }
+function increase Hard Cap ( uint amount ) external only Owner { hard Cap hard Cap . add ( amount ) ; remain remain . add ( amount ) ; Increase Hard Cap ( amount ) ; }
+function sale ( address recipient , uint value , uint rate ) private { require ( available ( ) ) ; require ( is White Listed ( recipient ) ) ; require ( value > min Tx & & value < max Tx ) ; uint tokens rate . mul ( value ) . div ( 1 ether ) ; remain remain . sub ( tokens ) ; token . transfer From ( owner , recipient , tokens ) ; owner . transfer ( value ) ; Token Sold ( recipient , value , tokens , rate ) ; }
+function rate ( ) public view returns ( uint ) { return rate Contract . get Rate ( ) ; }
+function available ( ) public view returns ( bool ) { return ( now > start Date & & now < stop Date ) ; }
+function is White Listed ( address address ) public view returns ( bool ) { return ( whitelist PRE . is White Listed ( address ) | | ( whitelist ICO . is White Listed ( address ) ) ) ; }
+function ( ) external payable { sale ( msg . sender , msg . value , rate ( ) ) ; }

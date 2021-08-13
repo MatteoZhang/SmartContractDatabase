@@ -1,6 +1,6 @@
 from tokenizers.tok_class.code_tokenizer import CodeTokenizer
 from tokenizers.tok_class.simple_tokenizer import SimpleTokenizer
-
+import os
 
 def double_tokenize(line):
     m = '-'
@@ -18,38 +18,29 @@ def double_tokenize(line):
 
 
 def main():
-    code = "CodeComm\\code.original"  # directory of code
-    comment = "CodeComm\\doc.original"  # directory of comment
-
+    directory = "smart_contracts"
     code_token = []
-    comment_token = []
-    keywords = ["function", "event", "modifier"]
-    with open(code, 'r', encoding="utf8") as read_code:
-        with open(comment, 'r', encoding="utf8") as read_comment:
-            code_line = read_code.readlines()
-            comment_line = read_comment.readlines()
-            for i in range(len(comment_line)):
-                try:
-                    if comment_line[i].isascii():
+    for root, dirs, files in os.walk(directory):
+        for filename in files:
+            contract = os.path.join(root, filename)
+            with open(contract, 'r', encoding="utf8") as read_code:
+                code_line = read_code.readlines()
+                for i in range(len(code_line)):
+                    try:
                         code_token.append(double_tokenize(code_line[i]))
-                        comment_token.append(double_tokenize(comment_line[i]))
-                except Exception as e:
-                    print(e)
+                    except Exception as e:
+                        print(e)
+            name = contract.split(".")
+            tok_code = open(name[0]+".tok", 'a+', encoding="utf8")
 
-    tok_code = open("CodeComm\\" + 'code_tok.original', 'a+', encoding="utf8")
-    tok_comm = open("CodeComm\\" + 'doc_tok.original', 'a+', encoding="utf8")
+            i = 0
 
-    i = 0
+            while i < len(code_token):
+                tok_code.write(code_token[i])
+                i += 1
+            code_token.clear()
 
-    while i < min(len(code_token), len(comment_token)):
-        tok_comm.write(comment_token[i])
-        tok_code.write(code_token[i])
-        i += 1
-    comment_token.clear()
-    code_token.clear()
-
-    tok_code.close()
-    tok_comm.close()
+            tok_code.close()
 
 
 if __name__ == '__main__':

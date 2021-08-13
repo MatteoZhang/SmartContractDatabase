@@ -1,0 +1,38 @@
+function mul ( uint256 a , uint256 b ) internal pure returns ( uint256 c ) { if ( a 0 ) { return 0 ; } c a b ; assert ( c a b ) ; return c ; }
+function div ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { return a b ; }
+function sub ( uint256 a , uint256 b ) internal pure returns ( uint256 ) { assert ( b < a ) ; return a b ; }
+function add ( uint256 a , uint256 b ) internal pure returns ( uint256 c ) { c a + b ; assert ( c > a ) ; return c ; }
+event Ownership Renounced ( address indexed previous Owner ) ;
+event Ownership Transferred ( address indexed previous Owner , address indexed new Owner ) ;
+modifier only Owner ( ) { require ( msg . sender owner ) ; ; }
+function transfer Ownership ( address new Owner ) public only Owner { require ( new Owner ! address ( 0 ) ) ; emit Ownership Transferred ( owner , new Owner ) ; owner new Owner ; }
+function renounce Ownership ( ) public only Owner { emit Ownership Renounced ( owner ) ; owner address ( 0 ) ; }
+event Pause ( ) ;
+event Unpause ( ) ;
+modifier when Not Paused ( ) { require ( ! paused ) ; ; }
+modifier when Paused ( ) { require ( paused ) ; ; }
+function pause ( ) only Owner when Not Paused public { paused true ; emit Pause ( ) ; }
+function unpause ( ) only Owner when Paused public { paused false ; emit Unpause ( ) ; }
+function total Supply ( ) public view returns ( uint256 ) ;
+function balance Of ( address who ) public view returns ( uint256 ) ;
+function transfer ( address to , uint256 value ) public returns ( bool ) ;
+event Transfer ( address indexed from , address indexed to , uint256 value ) ;
+function allowance ( address owner , address spender ) public view returns ( uint256 ) ;
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) ;
+function approve ( address spender , uint256 value ) public returns ( bool ) ;
+event Approval ( address indexed owner , address indexed spender , uint256 value ) ;
+function total Supply ( ) public view returns ( uint256 ) { return total Supply ; }
+function transfer ( address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ msg . sender ] ) ; balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; emit Transfer ( msg . sender , to , value ) ; return true ; }
+function balance Of ( address owner ) public view returns ( uint256 ) { return balances [ owner ] ; }
+event Burn ( uint256 value ) ;
+function burn ( uint256 value ) only Owner public { require ( value < balances [ owner ] ) ; balances [ owner ] balances [ owner ] . sub ( value ) ; total Supply total Supply . sub ( value ) ; emit Burn ( value ) ; }
+function transfer From ( address from , address to , uint256 value ) public returns ( bool ) { require ( to ! address ( 0 ) ) ; require ( value < balances [ from ] ) ; require ( value < allowed [ from ] [ msg . sender ] ) ; balances [ from ] balances [ from ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; allowed [ from ] [ msg . sender ] allowed [ from ] [ msg . sender ] . sub ( value ) ; emit Transfer ( from , to , value ) ; return true ; }
+function approve ( address spender , uint256 value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] value ; emit Approval ( msg . sender , spender , value ) ; return true ; }
+function allowance ( address owner , address spender ) public view returns ( uint256 ) { return allowed [ owner ] [ spender ] ; }
+function increase Approval ( address spender , uint added Value ) public returns ( bool ) { allowed [ msg . sender ] [ spender ] allowed [ msg . sender ] [ spender ] . add ( added Value ) ; emit Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function decrease Approval ( address spender , uint subtracted Value ) public returns ( bool ) { uint old Value allowed [ msg . sender ] [ spender ] ; if ( subtracted Value > old Value ) { allowed [ msg . sender ] [ spender ] 0 ; } else { allowed [ msg . sender ] [ spender ] old Value . sub ( subtracted Value ) ; } emit Approval ( msg . sender , spender , allowed [ msg . sender ] [ spender ] ) ; return true ; }
+function transfer ( address to , uint256 value ) public when Not Paused returns ( bool ) { return super . transfer ( to , value ) ; }
+function transfer From ( address from , address to , uint256 value ) public when Not Paused returns ( bool ) { return super . transfer From ( from , to , value ) ; }
+function approve ( address spender , uint256 value ) public when Not Paused returns ( bool ) { return super . approve ( spender , value ) ; }
+function increase Approval ( address spender , uint added Value ) public when Not Paused returns ( bool success ) { return super . increase Approval ( spender , added Value ) ; }
+function decrease Approval ( address spender , uint subtracted Value ) public when Not Paused returns ( bool success ) { return super . decrease Approval ( spender , subtracted Value ) ; }

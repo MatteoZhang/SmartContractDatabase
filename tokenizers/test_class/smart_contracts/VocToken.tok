@@ -1,0 +1,34 @@
+function mul ( uint a , uint b ) internal returns ( uint ) { uint c a b ; assert ( a 0 | | c a b ) ; return c ; }
+function div ( uint a , uint b ) internal returns ( uint ) { uint c a b ; return c ; }
+function sub ( uint a , uint b ) internal returns ( uint ) { assert ( b < a ) ; return a b ; }
+function add ( uint a , uint b ) internal returns ( uint ) { uint c a + b ; assert ( c > a ) ; return c ; }
+function max64 ( uint64 a , uint64 b ) internal constant returns ( uint64 ) { return a > b ? a : b ; }
+function min64 ( uint64 a , uint64 b ) internal constant returns ( uint64 ) { return a < b ? a : b ; }
+function max256 ( uint256 a , uint256 b ) internal constant returns ( uint256 ) { return a > b ? a : b ; }
+function min256 ( uint256 a , uint256 b ) internal constant returns ( uint256 ) { return a < b ? a : b ; }
+function assert ( bool assertion ) internal { if ( ! assertion ) { throw ; } }
+function balance Of ( address who ) constant returns ( uint ) ;
+function transfer ( address to , uint value ) ;
+event Transfer ( address indexed from , address indexed to , uint value ) ;
+modifier only Payload Size ( uint size ) { if ( msg . data . length < size + 4 ) { throw ; } ; }
+function transfer ( address to , uint value ) only Payload Size ( 2 32 ) { if ( to address ( 0 ) ) { throw ; } balances [ msg . sender ] balances [ msg . sender ] . sub ( value ) ; balances [ to ] balances [ to ] . add ( value ) ; Transfer ( msg . sender , to , value ) ; }
+function balance Of ( address owner ) constant returns ( uint balance ) { return balances [ owner ] ; }
+function allowance ( address owner , address spender ) constant returns ( uint ) ;
+function transfer From ( address from , address to , uint value ) ;
+function approve ( address spender , uint value ) ;
+event Approval ( address indexed owner , address indexed spender , uint value ) ;
+function transfer From ( address from , address to , uint value ) only Payload Size ( 3 32 ) { if ( to address ( 0 ) ) { throw ; } var allowance allowed [ from ] [ msg . sender ] ; balances [ to ] balances [ to ] . add ( value ) ; balances [ from ] balances [ from ] . sub ( value ) ; allowed [ from ] [ msg . sender ] allowance . sub ( value ) ; Transfer ( from , to , value ) ; }
+function approve ( address spender , uint value ) { if ( ( value ! 0 ) & & ( allowed [ msg . sender ] [ spender ] ! 0 ) ) throw ; allowed [ msg . sender ] [ spender ] value ; Approval ( msg . sender , spender , value ) ; }
+function allowance ( address owner , address spender ) constant returns ( uint remaining ) { return allowed [ owner ] [ spender ] ; }
+function Ownable ( ) { owner msg . sender ; }
+modifier only Owner ( ) { if ( msg . sender ! owner ) { throw ; } ; }
+function transfer Ownership ( address new Owner ) only Owner { if ( new Owner ! address ( 0 ) ) { owner new Owner ; } }
+event Pause ( ) ;
+event Unpause ( ) ;
+modifier when Not Paused ( ) { if ( paused ) throw ; ; }
+modifier when Paused { if ( ! paused ) throw ; ; }
+function pause ( ) only Owner when Not Paused returns ( bool ) { paused true ; Pause ( ) ; return true ; }
+function unpause ( ) only Owner when Paused returns ( bool ) { paused false ; Unpause ( ) ; return true ; }
+function transfer ( address to , uint value ) when Not Paused { super . transfer ( to , value ) ; }
+function transfer From ( address from , address to , uint value ) when Not Paused { super . transfer From ( from , to , value ) ; }
+function Voc Token ( ) { balances [ msg . sender ] total Supply ; Transfer ( address ( 0 ) , msg . sender , total Supply ) ; }
