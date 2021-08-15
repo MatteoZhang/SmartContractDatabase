@@ -174,9 +174,6 @@ def main():
                         separator.run()
                         comments = separator.write_comments()
                         codes = separator.write_codes()
-                        # if we need only functions
-                        # extractor = Extractor(lines, contract)
-                        # extractor.extract()
                     lines.clear()
                 file_num += 1
             else:
@@ -193,74 +190,6 @@ def main():
             print(file_num, " / ", total)
     raw_comment.close()
     raw_code.close()
-
-
-class Extractor:
-    """this class extract only the functions inside a file"""
-
-    def __init__(self, lines, contract_name):
-        self.contract = contract_name + "extracted"
-        self.single = '//'
-        # all lines
-        # format ["string1","string2"]
-        self.test_lines = [not_empty.strip() for not_empty in lines if not_empty != '\n']
-        self.test_lines = list(filter(None, self.test_lines))
-        # if string return true if empty --> '' false
-        self.comment = []
-        self.codes = []
-        self.keyword = ["function", "event", "modifier", "enum"]
-        # natspec comments use also /** and /// with tags @
-        # doxygen comments also uses the same char of natspec
-
-    def code_length(self, s, e, char_s, char_e, i):
-        c = 0
-        while s > e:
-            c += 1
-            s += self.test_lines[i + c].count(char_s)
-            e += self.test_lines[i + c].count(char_e)
-        return c
-
-    def code_inside(self, code_portion):
-        """
-        code inside {} of the funciton
-        :param code_portion: string
-        :return: string with code
-        """
-        code = []
-        for i in code_portion:
-            if i.startswith(self.single):
-                pass
-            elif self.single in i:
-                s = i.split(self.single)
-                code.append(s[1])
-            else:
-                code.append(i)
-        return ' '.join(code)
-
-    def extract(self):
-        for i in range(len(self.test_lines)):
-            try:
-                if any(self.test_lines[i].startswith(substring) for substring in self.keyword):
-                    braces_rs = self.test_lines[i].count('(')
-                    braces_re = self.test_lines[i].count(')')
-                    sub_round = self.code_length(braces_rs, braces_re, '(', ')', i)
-                    if sub_round != 0:
-                        r = sub_round
-                    else:
-                        r = 0
-                    braces_s = self.test_lines[i + r].count('{')
-                    braces_e = self.test_lines[i + r].count('}')
-                    sub_code_length = self.code_length(braces_s, braces_e, '{', '}', i + r)
-                    tmp_code = self.code_inside(self.test_lines[i:i + r + sub_code_length + 1])
-                    if tmp_code != '':
-                        self.codes.append(tmp_code + '\n')
-            except Exception as e:
-                print(e)
-
-        textfile = open(self.contract, "w")
-        for i in self.codes:
-            textfile.write(i)
-        textfile.close()
 
 
 if __name__ == '__main__':
