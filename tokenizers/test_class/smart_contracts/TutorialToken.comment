@@ -1,0 +1,29 @@
+@ dev the ownable constructor sets the original owner of the contract to the sender account .
+@ dev throws if called by any account other than the owner .
+@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+@ dev multiplies two numbers , throws on overflow . gas optimization : this is cheaper than asserting ' a ' not being zero , but the benefit is lost
+@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 uint256 c a b
+@ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+@ dev adds two numbers , throws on overflow .
+public functions
+@ param who the address to query . @ return the balance of the specified address .
+send value amount of tokens to address to
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev see { ierc20 total supply } .
+@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred .
+@ dev gets the balance of the specified address . @ param owner the address to query the the balance of . @ return an uint256 representing the amount owned
+@ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you
+@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+@ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+@ dev increase the amount of tokens that an owner allowed to a spender . approve should be called when allowed [ spender ] 0 . to increment allowed value
+@ dev decrease the amount of tokens that an owner allowed to a spender . approve should be called when allowed [ spender ] 0 . to decrement allowed value
+@ dev emitted when value tokens are burnt from one account ( burner ) @ param burner address which burned tokens @ param value amount of tokens burned
+@ dev burns a specific amount of tokens . @ param value the amount of token to be burned .
+@ dev internal function that burns an amount of the token of a given account . @ param who the account whose tokens will be burnt . @ param value
+@ dev function that is called when a spender . @ param from the address which you want to send tokens from @ param value the amount of tokens from
+@ dev Holder to be called by sender
+don ' t accept eth

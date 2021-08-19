@@ -1,0 +1,39 @@
+@ dev multiplies two numbers , throws on overflow .
+@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+@ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+@ dev adds two numbers , throws on overflow .
+@ param owner the address from which the balance will be retrieved @ return the balance
+send value amount of tokens to address to
+get the address to query .
+send value amount of tokens to address to
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ param owner the address of the account owning tokens @ param spender the address of the account able to transfer the tokens @ return amount of constant allowed value
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev distr token transfer @ param to the address of the sender @ param value the amount of token to be transferred @ return true if the given value
+@ return total amount of tokens
+@ param owner the address from which the balance will be retrieved @ return the balance
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev emitted during finish minting
+@ dev emitted when value tokens are burnt from one account ( burner ) @ param burner address which burned tokens @ param value amount of tokens burned
+@ dev tokens can be minted only before minting finished .
+@ dev throws if called by any account other than the owner .
+@ dev throws if called by any account other than the blacklist
+gets the balance of the specified sender .
+@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+@ notice distribution tokens and nothing the function
+@ dev private function to distr alpaca
+@ dev fallback function to accept eth . goblins will send eth back the pool .
+@ dev get investor staking contract .
+@ dev gets the balance of the specified address . @ param owner the address to query the the balance of . @ return an uint256 representing the amount owned
+mitigates the erc20 short address attack
+@ dev transfer token for a specified address @ param to the address to transfer to . @ param amount the amount to be transferred .
+@ dev moves amount tokens from sender to recipient using the allowance mechanism . amount is then deducted from the caller ' s allowance . returns a boolean value indicating
+allow spender to withdraw from your account , multiple times . to change the approve amount you first have to reduce the addresses allowance to zero by calling approve (
+@ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+@ param token address the address of the token contract @ return the token address
+@ dev withdraw ether from contract @ param ether address uint256 amount of ether transfer
+@ dev burns a specific amount of tokens . @ param value the amount of token to be burned . no need to require value < total supply , since
+@ dev withdraw ether to withdraw tokens from contract

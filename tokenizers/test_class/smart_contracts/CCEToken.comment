@@ -1,0 +1,15 @@
+@ return total amount of tokens
+@ param owner the address from which the balance will be retrieved @ return the balance
+@ notice send value token to to from msg . sender @ param to the address of the recipient @ param value the amount of token to be transferred @
+@ notice send value token to to from from on the condition it is approved by from @ param from the address of the sender @ param to the address
+@ notice msg . sender approves addr to spend value tokens @ param spender the address of the account able to transfer the tokens @ param value the amount of
+@ param owner the address of the account owning tokens @ param spender the address of the account able to transfer the tokens @ return amount of remaining tokens allowed
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev transfer tokens from one address to another . note that while this function emits an approval event , this is not required as per the specification , and
+what is the balance of a particular account ?
+@ notice approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+@ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+@ dev grants lp tokens from calling conditions .
+whether the given token contracts user ' s total supply can be careful
+@ dev allows spender to transfer tokens from your behalf on behalf of msg . sender . sender ' s behalf , and then money to work with approval (

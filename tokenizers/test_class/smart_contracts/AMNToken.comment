@@ -1,0 +1,97 @@
+@ dev returns the addition of two unsigned integers , reverting on overflow . counterpart to solidity ' s + operator . requirements : addition cannot overflow .
+@ dev returns the subtraction of two unsigned integers , reverting on overflow ( when the result is negative ) . counterpart to solidity ' s operator . requirements :
+@ dev returns the subtraction of two unsigned integers , reverting with custom message on overflow ( when the result is negative ) . counterpart to solidity ' s operator
+@ dev returns the multiplication of two unsigned integers , reverting on overflow . counterpart to solidity ' s operator . requirements : multiplication cannot overflow . gas optimization :
+@ dev returns the integer division of two unsigned integers . reverts on division by zero . the result is rounded towards zero . counterpart to solidity ' s operator
+@ dev returns the integer division of two unsigned integers . reverts with custom message on division by zero . the result is rounded towards zero . counterpart to solidity
+@ dev returns the remainder of dividing two unsigned integers . ( unsigned integer modulo ) , reverts when dividing by zero . counterpart to solidity ' s % operator
+@ dev returns the remainder of dividing two unsigned integers . ( unsigned integer modulo ) , reverts with custom message when dividing by zero . counterpart to solidity '
+@ dev returns the amount of tokens in existence .
+@ dev returns the amount of tokens owned by account .
+@ dev moves amount tokens from the caller ' s account to recipient . returns a boolean value indicating whether the operation succeeded . emits a { transfer } event
+@ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+@ dev sets amount as the allowance of spender over the caller ' s tokens . returns a boolean value indicating whether the operation succeeded . important : beware that
+@ dev moves amount tokens from sender to recipient using the allowance mechanism . amount is then deducted from the caller ' s allowance . returns a boolean value indicating
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev returns the address of the current owner .
+@ notice return owner address
+@ notice set a new owner address
+@ notice allows the owner to authorized owner @ param assume owner address of the new owner
+@ dev sets the implementer contract as addr for interface hash for interface hash . addr is an { ierc165 } event . if interface hash is an { ierc165
+@ dev returns the implementer of interface hash for addr . if no such implementer is registered , ) @ param addr the address of the contract @ param interface
+@ dev sets new manager as the manager for new manager . @ dev governance function called by the delegator manager @ param addr is the address of the new
+@ dev get the given address for a manager @ param addr is the address of the member @ return addr is the manager address
+@ dev sets the implementation address of the proxy . @ param Label the address of the new implementation . @ param implementation the address of the contract to be
+@ dev contract implements the address of the interface @ param addr address of the contract to query @ param interface id id of the contract
+@ dev delegate manager address to a manager @ param new ERC1820REGISTRY the new ERC1820REGISTRY manager address
+@ dev returns the implementer # interface } .
+@ dev sets the interface for { ierc165 } itself , as recovered
+@ dev know the reason on success or failure based on the eip 1066 application specific status codes . @ param function sig id of the function that needs to
+@ dev called by an { ierc777 } when a need .
+@ dev know the reason on success or failure based on the eip 1066 application specific status codes . @ param function sig id of the function that needs to
+@ dev called by an { ierc777 } token contract whenever operator roles library contracts of a given partition . @ param function name of the function that needs to
+@ dev called by an { ierc777 } token contract whenever operator to be approved for all or the other side . @ param function name of the function that
+@ dev called by an { ierc777 } token contract whenever operator address .
+@ dev returns true if an account is an operator of token holder . operators can send and burn tokens on behalf of their owners . all accounts are their
+@ notice get the built on frontend .
+@ dev get reserved encoding for a specific partition . @ param partition name of the partition .
+@ dev get collateral occupied value . @ param partition name of the partition .
+@ notice get the address of the given prefix ' s address
+@ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+@ notice send value token to to from from on the condition it is approved by from @ param from the address of the sender @ param to the address
+@ dev emitted when value tokens of token type from from to to .
+@ dev emitted when an option contract changes
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev emitted when an account operator is granted operator of an operator is allowed to transfer all tokens of the sender on their behalf .
+@ dev emitted when account is revoked token type token is transferred .
+@ dev emitted when operator for a specific partition .
+@ dev emitted when token holder
+@ notice emitted when a collateral manager is changed
+event that tracks default extension contract address change
+@ dev emitted when value tokens are moved from one account ( operator ) to another ( to ) . note that value may be zero .
+@ dev get total supply of token
+get the token balance for account token owner
+@ dev transfer tokens to a specified address . @ param to the address to transfer to . @ param value the amount to be transferred . @ return true
+@ dev transfer tokens from one address to another . @ param from the address which you want to send tokens from @ param to the address which you want
+@ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . @ param spender the address which will spend the funds
+@ dev atomically increases the allowance granted to spender by the caller . this is an alternative to { approve } that can be used as a mitigation for problems
+@ dev atomically decreases the allowance granted to spender by the caller . this is an alternative to { approve } that can be used as a mitigation for problems
+@ dev uniswap fails with zero address so no check is necessary here
+@ dev get chainlink
+@ dev returns the partitions data .
+@ dev transfer tokens from a specific partition . @ param partition name of the partition . @ param from the address which you want to send tokens . @
+@ dev see { ierc777 authorize operator } . emits an { approval } event indicating the updated allowance .
+@ dev see { ierc777 revoke operator } .
+@ dev authorize tokens for a specific partition . @ param partition name of the partition . @ param operator address of the operator . @ param operator address of
+@ dev allows ' operator ' as an operator for ' msg . sender ' for a given partition . @ param partition name of the partition . @ param
+is operator ( ) : returns true if operator is allowed to transfer ownership of token holder
+@ dev returns whether an operator is a specific partition . @ param partition name of the partition . @ param operator address which may be an operator of token
+@ dev checks whether partition is a specific partition is available for a given partition . @ param operator address for partition . @ param operator address for operator address
+@ dev returns the name of the token . @ return string representing the token name
+@ dev gets the token symbol . @ return string representing the token symbol
+@ dev allows users to access the number of decimals
+@ dev see { ierc777 granularity } . this implementation always returns granularity .
+@ dev returns the total quantity
+@ dev check the value of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param owner address the address which
+@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . @ param partition name of the partition . @ param
+@ dev increase the amount of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param spender the address which is
+@ dev decrease the amount of tokens that an owner allowed to a spender . approve should be called when allowed [ msg . sender ] , but also .
+@ notice registers collateral manager .
+@ dev checks if a manager is a manager .
+@ dev updates the implementation of the given implementation @ param prefix id the address of the new implementation . @ param implementation the address of the new implementation .
+@ notice returns true if the given address is currently active @ param prefix
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+@ dev transfer tokens from one address to another . @ param operator address which you want to send tokens from . @ param to the address which you want
+@ dev internal function that determines for a specific partition .
+@ dev add a specific partition for a specific partition . @ param to address of the to check . @ param value the amount of tokens to be added
+@ dev adds a new total partition . @ param partition name of the partition .
+@ dev remove value of a specific partition . @ param partition name of the partition .
+@ dev handles the contract extends a specific months due to the given operator . @ param from the address of the sender . @ param operator address of the
+@ dev call through ds of a specific partition . @ param to the address of the partition . @ param operator address of the operator for individual address of
+@ dev sets amount as the allowance of spender over the partition parameter . @ param partition name of the partition . @ param token address for the address that
+is operator ( ) : returns true if operator is allowed to transfer ownership of token holder
+@ dev returns whether the operator is allowed to manage all of the token holder . @ param partition name of the partition . @ param token address for which
+@ notice calls the logic contract ' s name @ param partition name of the partition . @ param operator address of the token holder . @ param token holder
+events

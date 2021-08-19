@@ -1,0 +1,67 @@
+returns whether the target address is a contract @ dev this function will return false if invoked during the constructor of a contract , as the code is not actually
+@ dev multiplies two numbers , throws on overflow .
+@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+@ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+@ dev adds two numbers , throws on overflow .
+@ dev the ownable constructor sets the original owner of the contract to the sender account .
+@ dev throws if called by any account other than the owner .
+@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+@ dev emitted when token id token is transferred from from to to .
+@ dev emitted when owner enables approved to manage the token id token .
+@ dev emitted when owner enables or disables ( approved ) operator to manage all of its assets .
+@ param owner the address from which the balance will be retrieved @ return the balance
+@ dev returns the owner of the nft specified by token id .
+@ dev returns whether the specified token exists . @ param token id uint256 id of the token to query the existence of @ return bool whether the token exists
+@ dev gives permission to to to transfer token id token to another account . the approval is cleared when the token is transferred . only a single account can
+@ dev returns the account approved for token id token . requirements : token id must exist .
+@ dev approve or remove operator as an operator for the caller . operators can call { transfer from } or { safe transfer from } for any token owned
+@ dev returns if the operator is allowed to manage all of the assets of owner . see { set approval for all }
+@ dev transfers a specific nft ( token id ) from one account ( from ) to another ( to ) . requirements : if the caller is not from
+@ dev transfers a specific nft ( token id ) from one account ( from ) to another ( to ) . requirements : from , to cannot be zero
+@ dev safely transfers token id token from from to to , checking first that contract recipients are aware of the erc721 protocol to prevent tokens from being forever locked
+public functions
+@ dev returns a token id owned by owner at a given index of its token list . use along with { balance of } to enumerate all of owner
+@ dev returns a token id at a given index of all the tokens stored by the contract . use along with { total supply } to enumerate all tokens
+@ dev returns the name of the token .
+@ dev returns the symbol of the token , usually a shorter version of the name .
+@ dev returns the uniform resource identifier ( uri ) for token id token .
+@ dev takes a new nft
+@ dev transfers a specific nft ( token id ) from one account ( to ) to another ( to ) . requirements : if the caller is not token
+@ dev returns the amount of tokens owned by an @ param owner owner
+@ dev throws if called by any account other than the owner .
+@ dev checks if token id can transfer is the token id
+@ dev gets the balance of the specified address @ param owner address to query the balance of @ return uint256 representing the amount owned by the passed address
+@ dev gets the owner of the specified token id @ param token id uint256 id of the token to query the owner of @ return address currently marked as
+@ dev returns whether the specified token exists . @ param token id uint256 id of the token to query the existence of @ return bool whether the token exists
+@ dev approves another address to transfer the given token id the zero address indicates there is no approved address . there can only be one approved address per token
+@ dev gets the approved address for a token id , or zero if no address set reverts if the token id does not exist . @ param token id
+@ dev sets or unsets the approval of a given operator an operator is allowed to transfer all tokens of the sender on their behalf @ param to operator address
+@ dev tells whether an operator is approved by a given owner . @ param owner owner address which you want to query the approval of @ param operator operator
+@ dev transfers the ownership of a given token id to another address usage of this method is discouraged , use safe transfer from whenever possible requires the msg from
+@ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement { ierc721receiver on erc721received }
+@ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement on erc721received , which is
+@ dev returns whether the given spender can transfer a given token id @ param spender address of the spender to query @ param token id uint256 id of the
+@ dev internal function to mint a new token . reverts if the given token id already exists . @ param to address the beneficiary that will own the minted
+@ dev internal function to burn a specific token reverts if the token does not exist @ param token id uint256 id of the token being burned by the msg
+@ dev internal function to clear current approval of a given token id . @ param owner owner of the token id of the token being transferred @ param token
+@ dev internal function to add a token to this extension ' s ownership tracking data structures . @ param to address representing the new owner of the given token
+@ dev internal function to remove a token id from the list of a given address @ param from address representing the previous owner of the given token id @
+@ dev internal function to invoke { ierc721receiver on erc721received } on a target address . the call is not executed if the target address is not a contract .
+@ dev whenever an { ierc721 } token id token is transferred to this contract via { ierc721 safe transfer from } by from . this function must return the
+@ dev function to ERC721Token the name parameter for erc20 token symbol }
+@ return the name of the token .
+@ return the symbol of the token .
+@ dev returns an uri for a given token id throws if the token id does not exist . may return an empty string . @ param token id uint256
+@ dev internal function to set the token uri for a given token reverts if the token id does not exist @ param token id uint256 id of the token
+@ dev gets the token id at a given index of the tokens list of the requested owner @ param owner address owning the tokens list to be accessed @
+@ dev gets the total amount of tokens stored by the contract @ return uint256 representing the total amount of tokens
+@ dev gets the token id at a given index of all the tokens in this contract reverts if the index is greater or equal to the total number of
+@ dev internal function to add a token to this extension ' s ownership tracking data structures . @ param to address representing the new owner of the given token
+@ dev internal function to remove a token id from the list of a given address @ param from address representing the previous owner of the given token id @
+@ dev internal function to mint a new token reverts if the given token id already exists @ param to the address that will own the minted token @ param
+@ dev internal function to burn a specific token reverts if the token does not exist @ param owner owner of the token to burn @ param token id uint256
+@ dev function to mint tokens .
+@ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement { ierc721receiver on erc721received }
+@ dev function to mint tokens @ param to the address that will receive the minted tokens . @ param token id uint256 id of the minted token to mint
+@ dev burn tokens . see burn
+@ dev set a distinct uri ( rfc 3986 ) for a given token id . @ param token id uint256 id of the token type id substitution mechanism https

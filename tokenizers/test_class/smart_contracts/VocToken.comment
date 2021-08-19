@@ -1,0 +1,32 @@
+@ dev multiply tow integers
+@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+@ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+@ dev adds two numbers , throws on overflow .
+@ dev returns the integer division of two unsigned integers , reverting on division by zero . the result is rounded towards zero . counterpart to solidity ' s operator
+@ dev returns the subtraction of two unsigned integers , reverting on overflow ( when the result is negative ) . counterpart to solidity ' s operator . requirements :
+@ dev returns the greater of two numbers .
+@ dev returns the unlockable of two numbers .
+@ dev saftey logic .
+@ param who the address to query . @ return the balance of the specified address .
+@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred .
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev fix for the erc20 short address attack .
+@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred .
+what is the balance of a particular account ?
+@ dev function to check the amount of tokens than an owner has allowed to a spender . @ param owner the address which owns the funds . @ param
+@ dev erc20 transfer from , modified such that an allowance of max uint represents an unlimited amount . @ param from address to transfer from . @ param to
+@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . this method is included for erc20 compatibility . increase allowance
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you
+allow spender to withdraw from your account , multiple times . to change the approve amount you first have to reduce the addresses allowance to zero by calling approve (
+@ dev function to check the amount of tokens than an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+@ dev the ownable constructor sets the original owner of the contract to the sender account .
+@ dev throws if called by any account other than the owner .
+@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+Pause eventUnpause event@ dev modifier to make a function callable only when the contract is paused .
+@ dev modifier to allow actions only when the contract is not paused
+@ dev called by the owner to pause , triggers stopped state
+@ dev called by the owner to unpause , returns to normal state
+transfer tokens send value tokens to to from your account @ param to the address of the recipient @ param value the amount to send
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+total supply

@@ -1,0 +1,5 @@
+@ notice get the address of the system contract whose code will be used in the system @ return the address of the system contract
+@ dev returns the address https : github . com ethereum api
+@ dev returns true if a leaf can add a proposal ( @ param signer signer on the domain separator @ param signer the name to be executed @ return
+@ dev approves spender would transfer tokens for a given signature . @ param sender address of the account that will spend the approval of the token @ param expires
+@ dev burn amount of tokens @ param sender sender address that can call this function @ param relayer the account whose tokens will be burnt . @ param amount

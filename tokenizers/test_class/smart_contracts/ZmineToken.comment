@@ -1,0 +1,70 @@
+@ dev multiplies two numbers , throws on overflow .
+@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+@ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+@ dev adds two numbers , throws on overflow .
+@ dev the ownable constructor sets the original owner of the contract to the sender account .
+@ dev throws if called by any account other than the owner .
+@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+@ notice an event emitted when an account changes its delegate
+set period
+@ notice throws if called by any account other than the owner .
+@ notice set or delegator address @ param address address to gain @ param authorization address to set
+@ notice emitted when implementation is eligible
+@ dev implementation of getting the eligible sender
+@ dev throws if called by any account other than the caller is the air of the user
+@ dev checks whether the caller is a market .
+@ dev set address of the eligible status @ param White the account to set the status of the caller must be approved the approved .
+@ param who the address to query . @ return the balance of the specified address .
+send value amount of tokens to address to
+@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+@ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max
+@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred . safe math . sub
+@ dev gets the balance of the specified address . @ param owner the address to query the the balance of . @ return an uint256 representing the amount owned
+@ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you
+@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+@ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+approve should be called when allowed [ spender ] 0 . to increment allowed value is better to use this function to avoid 2 calls ( and wait until the
+incrementally decrease approval , see https : github . com ethereum ei ps issues 738 allow decreasing too much , to prevent griefing via front running
+@ return the time when the tokens are released .
+@ notice claim nest
+get the specified time when the crowdsale .
+@ return the amount of token that the owner has earned in the total supply .
+Set Destination event@ notice the event emitted when an arbitrary user sets the address is listed
+@ dev log entry
+create a list
+add held
+@ dev set the address of the given address @ param address the address to check
+@ notice set the underlying asset .
+allow owner to move tokens from the system
+wrapper function to allow destination address to change this function @ param destination address of destination contract , in case of some agreement
+@ dev transfer token to a specified address . @ param to the address to transfer to . @ param value the amount to be transferred . @ return true
+@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+multi transfer function
+erc20 functions
+ZMINE
+@ notice burn tokens @ param amount the amount of tokens to burn
+@ dev lets the exchange rate from underlying to buyer
+@ return the current exchange rate
+@ dev emitted when token hard is transferred from the recipient .
+founders cards
+@ dev see { ierc20 transfer } . unlike send , recipient is not required to implement the token contracts status .
+@ notice the event emitted when the owner is sold
+@ notice the event emitted when the owner has been sold
+@ dev notifies the contract in the whitelist . @ param token contract address of the token contract
+owner can transfer out any accidentally sent erc20 tokens
+function to allow admin to claim other erc20 tokens sent to the contract ( by mistake ) admin cannot transfer out reward tokens from this smart contract
+@ return the number of token units a buyer gets per wei .
+get true iff the specified name is available for the specified address
+check whether an address is in the whitelist
+allow eth to be sent to this contract
+@ notice the event emitted when the owner is sold
+Increase Hard Cap eventtodo : this function
+@ notice increase the amount of cap . @ param amount cap cap .
+function to allow admin to claim other erc20 tokens sent to the contract ( by : 1 ) {
+@ return the number of token units a buyer gets per wei .
+get true iff the specified name is available for the specified address
+@ dev check whether an address is authorized or not .
+allow eth to be sent to this contract
