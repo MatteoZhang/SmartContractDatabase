@@ -2,12 +2,12 @@
 @ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
 @ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
 @ dev adds two numbers , throws on overflow .
-events
+Ownership Transferred event
 @ dev the ownable constructor sets the original owner of the contract to the sender account .
 @ dev throws if called by any account other than the owner .
 @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
 @ notice an event emitted when an account changes its delegate
-set period
+Authorizable function
 @ notice throws if called by any account other than the owner .
 @ notice set or delegator address @ param address address to gain @ param authorization address to set
 @ notice emitted when implementation is eligible
@@ -33,11 +33,11 @@ incrementally decrease approval , see https : github . com ethereum ei ps issues
 @ notice claim nest
 get the specified time when the crowdsale .
 @ return the amount of token that the owner has earned in the total supply .
-managment events
+Set Destination event
 @ notice the event emitted when an arbitrary user sets the address is listed
 @ dev log entry
 create a list
-add held
+add Holders List function
 @ dev set the address of the given address @ param address the address to check
 @ notice set the underlying asset .
 allow owner to move tokens from the system
@@ -45,13 +45,13 @@ wrapper function to allow destination address to change this function @ param de
 @ dev transfer token to a specified address . @ param to the address to transfer to . @ param value the amount to be transferred . @ return true
 @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
 multi transfer function
-erc20 functions
-ZMINE
+air Drop function
+ZMINE function
 @ notice burn tokens @ param amount the amount of tokens to burn
 @ dev lets the exchange rate from underlying to buyer
 @ return the current exchange rate
 @ dev emitted when token hard is transferred from the recipient .
-founders cards
+Founder Threader function
 @ dev see { ierc20 transfer } . unlike send , recipient is not required to implement the token contracts status .
 @ notice the event emitted when the owner is sold
 @ notice the event emitted when the owner has been sold
@@ -63,8 +63,8 @@ get true iff the specified name is available for the specified address
 check whether an address is in the whitelist
 allow eth to be sent to this contract
 @ notice the event emitted when the owner is sold
-events
-ICO sale
+Increase Hard Cap event
+ICO Sale function
 @ notice increase the amount of cap . @ param amount cap cap .
 function to allow admin to claim other erc20 tokens sent to the contract ( by : 1 ) {
 @ return the number of token units a buyer gets per wei .

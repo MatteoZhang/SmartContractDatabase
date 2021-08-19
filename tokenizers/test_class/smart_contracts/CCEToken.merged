@@ -1,0 +1,30 @@
+COMMENT: @ return total amount of tokens
+CODE: function totalSupply() constant returns (uint256 supply) {}
+COMMENT: @ param owner the address from which the balance will be retrieved @ return the balance
+CODE: function balanceOf(address _owner) constant returns (uint256 balance) {}
+COMMENT: @ notice send value token to to from msg . sender @ param to the address of the recipient @ param value the amount of token to be transferred @
+CODE: function transfer(address _to, uint256 _value) returns (bool success) {}
+COMMENT: @ notice send value token to to from from on the condition it is approved by from @ param from the address of the sender @ param to the address
+CODE: function transferFrom(address _from, address _to, uint256 _value) returns (bool success) {}
+COMMENT: @ notice msg . sender approves addr to spend value tokens @ param spender the address of the account able to transfer the tokens @ param value the amount of
+CODE: function approve(address _spender, uint256 _value) returns (bool success) {}
+COMMENT: @ param owner the address of the account owning tokens @ param spender the address of the account able to transfer the tokens @ return amount of remaining tokens allowed
+CODE: function allowance(address _owner, address _spender) constant returns (uint256 remaining) {}
+COMMENT: @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+CODE: event Transfer(address indexed _from, address indexed _to, uint256 _value);
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event Approval(address indexed _owner, address indexed _spender, uint256 _value);
+COMMENT: @ dev transfer tokens from one address to another . note that while this function emits an approval event , this is not required as per the specification , and
+CODE: function transferFrom(address _from, address _to, uint256 _value) returns (bool success) { if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0) { balances[_to] += _value; balances[_from] -= _value; allowed[_from][msg.sender] -= _value; Transfer(_from, _to, _value); return true; } else { return false; } } function balanceOf(address _owner) constant returns (uint256 balance) { return balances[_owner]; } function approve(address _spender, uint256 _value) returns (bool success) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; } function allowance(address _owner, address _spender) constant returns (uint256 remaining) { return allowed[_owner][_spender]; } mapping (address => uint256) balances; mapping (address => mapping (address => uint256)) allowed; uint256 public totalSupply; }
+COMMENT: what is the balance of a particular account ?
+CODE: function balanceOf(address _owner) constant returns (uint256 balance) { return balances[_owner]; }
+COMMENT: @ notice approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+CODE: function approve(address _spender, uint256 _value) returns (bool success) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; }
+COMMENT: @ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+CODE: function allowance(address _owner, address _spender) constant returns (uint256 remaining) { return allowed[_owner][_spender]; }
+COMMENT: @ dev grants lp tokens from calling conditions .
+CODE: function () { throw; }
+COMMENT: whether the given token contracts user ' s total supply can be careful
+CODE: function HumanStandardToken( uint256 _initialAmount, string _tokenName, uint8 _decimalUnits, string _tokenSymbol ) {  Give the creator all initial tokens  Update total supply  Set the name for display purposes  Amount of decimals for display purposes  Set the symbol for display purposes }
+COMMENT: @ dev allows spender to transfer tokens from your behalf on behalf of msg . sender . sender ' s behalf , and then money to work with approval (
+CODE: function approveAndCall(address _spender, uint256 _value, bytes _extraData) returns (bool success) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); if(!_spender.call(bytes4(bytes32(sha3("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) { throw; } return true; }

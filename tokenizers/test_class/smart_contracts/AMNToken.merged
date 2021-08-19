@@ -1,0 +1,200 @@
+COMMENT: @ dev returns the addition of two unsigned integers , reverting on overflow . counterpart to solidity ' s + operator . requirements : addition cannot overflow .
+CODE: function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; require(c >= a, "SafeMath: addition overflow"); return c; }
+COMMENT: @ dev returns the subtraction of two unsigned integers , reverting on overflow ( when the result is negative ) . counterpart to solidity ' s operator . requirements :
+CODE: function sub(uint256 a, uint256 b) internal pure returns (uint256) { return sub(a, b, "SafeMath: subtraction overflow"); }
+COMMENT: @ dev returns the subtraction of two unsigned integers , reverting with custom message on overflow ( when the result is negative ) . counterpart to solidity ' s operator
+CODE: function sub(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b <= a, errorMessage); uint256 c = a - b; return c; }
+COMMENT: @ dev returns the multiplication of two unsigned integers , reverting on overflow . counterpart to solidity ' s operator . requirements : multiplication cannot overflow . gas optimization :
+CODE: function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; require(c / a == b, "SafeMath: multiplication overflow"); return c; }
+COMMENT: @ dev returns the integer division of two unsigned integers . reverts on division by zero . the result is rounded towards zero . counterpart to solidity ' s operator
+CODE: function div(uint256 a, uint256 b) internal pure returns (uint256) { return div(a, b, "SafeMath: division by zero"); }
+COMMENT: @ dev returns the integer division of two unsigned integers . reverts with custom message on division by zero . the result is rounded towards zero . counterpart to solidity
+CODE: function div(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b > 0, errorMessage); uint256 c = a / b; return c; }
+COMMENT: @ dev returns the remainder of dividing two unsigned integers . ( unsigned integer modulo ) , reverts when dividing by zero . counterpart to solidity ' s % operator
+CODE: function mod(uint256 a, uint256 b) internal pure returns (uint256) { return mod(a, b, "SafeMath: modulo by zero"); }
+COMMENT: @ dev returns the remainder of dividing two unsigned integers . ( unsigned integer modulo ) , reverts with custom message when dividing by zero . counterpart to solidity '
+CODE: function mod(uint256 a, uint256 b, string memory errorMessage) internal pure returns (uint256) { require(b != 0, errorMessage); return a % b; }
+COMMENT: @ dev returns the amount of tokens in existence .
+CODE: function totalSupply() external view returns (uint256);
+COMMENT: @ dev returns the amount of tokens owned by account .
+CODE: function balanceOf(address account) external view returns (uint256);
+COMMENT: @ dev moves amount tokens from the caller ' s account to recipient . returns a boolean value indicating whether the operation succeeded . emits a { transfer } event
+CODE: function transfer(address recipient, uint256 amount) external returns (bool);
+COMMENT: @ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+CODE: function allowance(address owner, address spender) external view returns (uint256);
+COMMENT: @ dev sets amount as the allowance of spender over the caller ' s tokens . returns a boolean value indicating whether the operation succeeded . important : beware that
+CODE: function approve(address spender, uint256 amount) external returns (bool);
+COMMENT: @ dev moves amount tokens from sender to recipient using the allowance mechanism . amount is then deducted from the caller ' s allowance . returns a boolean value indicating
+CODE: function transferFrom(address sender, address recipient, uint256 amount) external returns (bool);
+COMMENT: @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+CODE: event Transfer(address indexed from, address indexed to, uint256 value);
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event Approval(address indexed owner, address indexed spender, uint256 value);
+COMMENT: Ownership Transfer Authorization event
+CODE: event OwnershipTransferAuthorization(address indexed authorizedAddress);
+COMMENT: Owner Update event
+CODE: event OwnerUpdate(address indexed oldValue, address indexed newValue);
+COMMENT: @ dev returns the address of the current owner .
+CODE: function owner() public view returns (address) { return _owner; }
+COMMENT: @ notice return owner address
+CODE: function authorizedNewOwner() public view returns (address) { return _authorizedNewOwner; }
+COMMENT: @ notice set a new owner address
+CODE: function authorizeOwnershipTransfer(address _authorizedAddress) external { require(msg.sender == _owner, "Invalid sender"); _authorizedNewOwner = _authorizedAddress; emit OwnershipTransferAuthorization(_authorizedNewOwner); }
+COMMENT: @ notice allows the owner to authorized owner @ param assume owner address of the new owner
+CODE: function assumeOwnership() external { require(msg.sender == _authorizedNewOwner, "Invalid sender"); address oldValue = _owner; _owner = _authorizedNewOwner; _authorizedNewOwner = address(0); emit OwnerUpdate(oldValue, _owner); }
+COMMENT: @ dev sets the implementer contract as addr for interface hash for interface hash . addr is an { ierc165 } event . if interface hash is an { ierc165
+CODE: function setInterfaceImplementer( address _addr, bytes32 _interfaceHash, address _implementer ) external virtual;
+COMMENT: @ dev returns the implementer of interface hash for addr . if no such implementer is registered , ) @ param addr the address of the contract @ param interface
+CODE: function getInterfaceImplementer(address _addr, bytes32 _interfaceHash)
+COMMENT: @ dev sets new manager as the manager for new manager . @ dev governance function called by the delegator manager @ param addr is the address of the new
+CODE: function setManager(address _addr, address _newManager) external virtual;
+COMMENT: @ dev get the given address for a manager @ param addr is the address of the member @ return addr is the manager address
+CODE: function getManager(address _addr) public virtual view returns (address);
+COMMENT: @ dev sets the implementation address of the proxy . @ param Label the address of the new implementation . @ param implementation the address of the contract to be
+CODE: function setInterfaceImplementation( string memory _interfaceLabel, address _implementation ) internal { bytes32 interfaceHash = keccak256(abi.encodePacked(_interfaceLabel)); ERC1820REGISTRY.setInterfaceImplementer( address(this), interfaceHash, _implementation ); }
+COMMENT: @ dev contract implements the address of the interface @ param addr address of the contract to query @ param interface id id of the contract
+CODE: function interfaceAddr(address addr, string memory _interfaceLabel)
+COMMENT: @ dev delegate manager address to a manager @ param new ERC1820REGISTRY the new ERC1820REGISTRY manager address
+CODE: function delegateManagement(address _newManager) internal { ERC1820REGISTRY.setManager(address(this), _newManager); }
+COMMENT: @ dev returns the implementer # interface } .
+CODE: function canImplementInterfaceForAddress( bytes32 _interfaceHash,  Comments to avoid compilation warnings for unused variables. /*addr*/ ) external view returns (bytes32) { if (_interfaceHashes[_interfaceHash]) { return ERC1820_ACCEPT_MAGIC; } else { return ""; } }
+COMMENT: @ dev sets the interface for { ierc165 } itself , as recovered
+CODE: function _setInterface(string memory _interfaceLabel) internal { _interfaceHashes[keccak256(abi.encodePacked(_interfaceLabel))] = true; }
+COMMENT: @ dev know the reason on success or failure based on the eip 1066 application specific status codes . @ param function sig id of the function that needs to
+CODE: function canTransfer( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external view returns (bool);
+COMMENT: @ dev called by an { ierc777 } when a need .
+CODE: function tokensToTransfer( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external;
+COMMENT: @ dev know the reason on success or failure based on the eip 1066 application specific status codes . @ param function sig id of the function that needs to
+CODE: function canReceive( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external view returns (bool);
+COMMENT: @ dev called by an { ierc777 } token contract whenever operator roles library contracts of a given partition . @ param function name of the function that needs to
+CODE: function tokensReceived( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external;
+COMMENT: @ dev called by an { ierc777 } token contract whenever operator to be approved for all or the other side . @ param function name of the function that
+CODE: function tokensFromPartitionToValidate( bytes4 _functionSig, bytes32 _partition, address _operator, address _from, address _to, uint256 _value, bytes calldata _data, bytes calldata _operatorData ) external;
+COMMENT: @ dev called by an { ierc777 } token contract whenever operator address .
+CODE: function tokensToPartitionToValidate( bytes4 _functionSig, bytes32 _partition, address _operator, address _from, address _to, uint256 _value, bytes calldata _data, bytes calldata _operatorData ) external;
+COMMENT: @ dev returns true if an account is an operator of token holder . operators can send and burn tokens on behalf of their owners . all accounts are their
+CODE: function isOperatorForPartitionScope( bytes32 _partition, address _operator, address _tokenHolder ) external view returns (bool);
+COMMENT: @ notice get the built on frontend .
+CODE: function _getDestinationPartition(bytes memory _data, bytes32 _fallbackPartition)
+COMMENT: @ dev get reserved encoding for a specific partition . @ param partition name of the partition .
+CODE: function _getPartitionPrefix(bytes32 _partition) internal pure returns (bytes4) { return bytes4(_partition); }
+COMMENT: @ dev get collateral occupied value . @ param partition name of the partition .
+CODE: function _splitPartition(bytes32 _partition)
+COMMENT: @ notice get the address of the given prefix ' s address
+CODE: function _getPartitionStrategyValidatorIName(bytes4 _prefix)
+COMMENT: @ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+CODE: function allowance(address owner, address spender)
+COMMENT: @ notice send value token to to from from on the condition it is approved by from @ param from the address of the sender @ param to the address
+CODE: function transferFrom( address from, address to, uint256 value ) external returns (bool success);
+COMMENT: @ dev emitted when value tokens of token type from from to to .
+CODE: event TransferByPartition( bytes32 indexed fromPartition, address operator, address indexed from, address indexed to, uint256 value, bytes data, bytes operatorData );
+COMMENT: @ dev emitted when an option contract changes
+CODE: event ChangedPartition( bytes32 indexed fromPartition, bytes32 indexed toPartition, uint256 value );
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event ApprovalByPartition( bytes32 indexed partition, address indexed owner, address indexed spender, uint256 value );
+COMMENT: @ dev emitted when an account operator is granted operator of an operator is allowed to transfer all tokens of the sender on their behalf .
+CODE: event AuthorizedOperator(address indexed operator, address indexed tokenHolder);
+COMMENT: @ dev emitted when account is revoked token type token is transferred .
+CODE: event RevokedOperator(address indexed operator, address indexed tokenHolder);
+COMMENT: @ dev emitted when operator for a specific partition .
+CODE: event AuthorizedOperatorByPartition( bytes32 indexed partition, address indexed operator, address indexed tokenHolder );
+COMMENT: @ dev emitted when token holder
+CODE: event RevokedOperatorByPartition( bytes32 indexed partition, address indexed operator, address indexed tokenHolder );
+COMMENT: @ notice emitted when a collateral manager is changed
+CODE: event CollateralManagerRegistered(address collateralManager);
+COMMENT: event that tracks default extension contract address change
+CODE: event PartitionStrategySet(bytes4 flag, string name, address indexed implementation);
+COMMENT: Minted event
+CODE: event Minted(address indexed operator, address indexed to, uint256 value, bytes data);
+COMMENT: @ dev emitted when value tokens are moved from one account ( operator ) to another ( to ) . note that value may be zero .
+CODE: event Swap(address indexed operator, address indexed from, uint256 value);
+COMMENT: @ dev get total supply of token
+CODE: function totalSupply() external override view returns (uint256) { return _totalSupply; }
+COMMENT: get the token balance for account token owner
+CODE: function balanceOf(address _tokenHolder) external override view returns (uint256) { return _balances[_tokenHolder]; }
+COMMENT: @ dev transfer tokens to a specified address . @ param to the address to transfer to . @ param value the amount to be transferred . @ return true
+CODE: function transfer(address _to, uint256 _value) external override returns (bool) { _transferByDefaultPartition(msg.sender, msg.sender, _to, _value, ""); return true; }
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address which you want to send tokens from @ param to the address which you want
+CODE: function transferFrom( address _from, address _to, uint256 _value ) external override returns (bool) { _transferByDefaultPartition(msg.sender, _from, _to, _value, ""); return true; }
+COMMENT: @ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+CODE: function allowance(address _owner, address _spender)
+COMMENT: @ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . @ param spender the address which will spend the funds
+CODE: function approve(address _spender, uint256 _value) external override returns (bool) { _approveByPartition(defaultPartition, msg.sender, _spender, _value); return true; }
+COMMENT: @ dev atomically increases the allowance granted to spender by the caller . this is an alternative to { approve } that can be used as a mitigation for problems
+CODE: function increaseAllowance(address _spender, uint256 _addedValue)
+COMMENT: @ dev atomically decreases the allowance granted to spender by the caller . this is an alternative to { approve } that can be used as a mitigation for problems
+CODE: function decreaseAllowance(address _spender, uint256 _subtractedValue)
+COMMENT: @ dev uniswap fails with zero address so no check is necessary here
+CODE: function swap(address _from) public { uint256 amount = swapToken.allowance(_from, address(this)); require(amount > 0, EC_53_INSUFFICIENT_ALLOWANCE); require( swapToken.transferFrom(_from, swapTokenGraveyard, amount), EC_60_SWAP_TRANSFER_FAILURE ); _mint(msg.sender, _from, amount); emit Swap(msg.sender, _from, amount); }
+COMMENT: @ dev get chainlink
+CODE: function balanceOfByPartition(bytes32 _partition, address _tokenHolder)
+COMMENT: @ dev returns the partitions data .
+CODE: function partitionsOf(address _tokenHolder) external view returns (bytes32[] memory) { return _partitionsOf[_tokenHolder]; }
+COMMENT: @ dev transfer tokens from a specific partition . @ param partition name of the partition . @ param from the address which you want to send tokens . @
+CODE: function transferByPartition( bytes32 _partition, address _from, address _to, uint256 _value, bytes calldata _data, bytes calldata _operatorData ) external returns (bytes32) { return _transferByPartition( _partition, msg.sender, _from, _to, _value, _data, _operatorData ); }
+COMMENT: @ dev see { ierc777 authorize operator } . emits an { approval } event indicating the updated allowance .
+CODE: function authorizeOperator(address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperator[msg.sender][_operator] = true; emit AuthorizedOperator(_operator, msg.sender); }
+COMMENT: @ dev see { ierc777 revoke operator } .
+CODE: function revokeOperator(address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperator[msg.sender][_operator] = false; emit RevokedOperator(_operator, msg.sender); }
+COMMENT: @ dev authorize tokens for a specific partition . @ param partition name of the partition . @ param operator address of the operator . @ param operator address of
+CODE: function authorizeOperatorByPartition(bytes32 _partition, address _operator)
+COMMENT: @ dev allows ' operator ' as an operator for ' msg . sender ' for a given partition . @ param partition name of the partition . @ param
+CODE: function revokeOperatorByPartition(bytes32 _partition, address _operator) external { require(_operator != msg.sender, EC_58_INVALID_OPERATOR); _authorizedOperatorByPartition[msg.sender][_partition][_operator] = false; emit RevokedOperatorByPartition(_partition, _operator, msg.sender); }
+COMMENT: is operator ( ) : returns true if operator is allowed to transfer ownership of token holder
+CODE: function isOperator(address _operator, address _tokenHolder)
+COMMENT: @ dev returns whether an operator is a specific partition . @ param partition name of the partition . @ param operator address which may be an operator of token
+CODE: function isOperatorForPartition( bytes32 _partition, address _operator, address _tokenHolder ) external view returns (bool) { return _isOperatorForPartition(_partition, _operator, _tokenHolder); }
+COMMENT: @ dev checks whether partition is a specific partition is available for a given partition . @ param operator address for partition . @ param operator address for operator address
+CODE: function isOperatorForCollateralManager( bytes32 _partition, address _operator, address _collateralManager ) external view returns (bool) { return _isCollateralManager[_collateralManager] && (_isOperator(_operator, _collateralManager) || _authorizedOperatorByPartition[_collateralManager][_partition][_operator]); }
+COMMENT: @ dev returns the name of the token . @ return string representing the token name
+CODE: function name() external view returns (string memory) { return _name; }
+COMMENT: @ dev gets the token symbol . @ return string representing the token symbol
+CODE: function symbol() external view returns (string memory) { return _symbol; }
+COMMENT: @ dev allows users to access the number of decimals
+CODE: function decimals() external pure returns (uint8) { return uint8(18); }
+COMMENT: @ dev see { ierc777 granularity } . this implementation always returns granularity .
+CODE: function granularity() external pure returns (uint256) { return _granularity; }
+COMMENT: @ dev returns the total quantity
+CODE: function totalPartitions() external view returns (bytes32[] memory) { return _totalPartitions; }
+COMMENT: @ dev check the value of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param owner address the address which
+CODE: function allowanceByPartition( bytes32 _partition, address _owner, address _spender ) external view returns (uint256) { return _allowedByPartition[_partition][_owner][_spender]; }
+COMMENT: @ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . @ param partition name of the partition . @ param
+CODE: function approveByPartition( bytes32 _partition, address _spender, uint256 _value ) external returns (bool) { _approveByPartition(_partition, msg.sender, _spender, _value); return true; }
+COMMENT: @ dev increase the amount of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param spender the address which is
+CODE: function increaseAllowanceByPartition( bytes32 _partition, address _spender, uint256 _addedValue ) external returns (bool) { _approveByPartition( _partition, msg.sender, _spender, _allowedByPartition[_partition][msg.sender][_spender].add(_addedValue) ); return true; }
+COMMENT: @ dev decrease the amount of tokens that an owner allowed to a spender . approve should be called when allowed [ msg . sender ] , but also .
+CODE: function decreaseAllowanceByPartition( bytes32 _partition, address _spender, uint256 _subtractedValue ) external returns (bool) { _approveByPartition( _partition, msg.sender, _spender, _allowedByPartition[_partition][msg.sender][_spender].sub(_subtractedValue) ); return true; }
+COMMENT: @ notice registers collateral manager .
+CODE: function registerCollateralManager() external { require(!_isCollateralManager[msg.sender], EC_5C_ADDRESS_CONFLICT); collateralManagers.push(msg.sender); _isCollateralManager[msg.sender] = true; emit CollateralManagerRegistered(msg.sender); }
+COMMENT: @ dev checks if a manager is a manager .
+CODE: function isCollateralManager(address _collateralManager)
+COMMENT: @ dev updates the implementation of the given implementation @ param prefix id the address of the new implementation . @ param implementation the address of the new implementation .
+CODE: function setPartitionStrategy(bytes4 _prefix, address _implementation) external { require(msg.sender == owner(), EC_56_INVALID_SENDER); require(!_isPartitionStrategy[_prefix], EC_5E_PARTITION_PREFIX_CONFLICT); require(_prefix != ZERO_PREFIX, EC_5F_INVALID_PARTITION_PREFIX_0); string memory iname = PartitionUtils._getPartitionStrategyValidatorIName(_prefix); ERC1820Client.setInterfaceImplementation(iname, _implementation); partitionStrategies.push(_prefix); _isPartitionStrategy[_prefix] = true; emit PartitionStrategySet(_prefix, iname, _implementation); }
+COMMENT: @ notice returns true if the given address is currently active @ param prefix
+CODE: function isPartitionStrategy(bytes4 _prefix) external view returns (bool) { return _isPartitionStrategy[_prefix]; }
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+CODE: function _transferByPartition( bytes32 _fromPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal returns (bytes32) { require(_to != address(0), EC_57_INVALID_RECEIVER); if (_from != _operator) { require( _isOperatorForPartition(_fromPartition, _operator, _from) || (_value <= _allowedByPartition[_fromPartition][_from][_operator]), EC_53_INSUFFICIENT_ALLOWANCE ); if (_allowedByPartition[_fromPartition][_from][_operator] >= _value) { _allowedByPartition[_fromPartition][_from][msg .sender] = _allowedByPartition[_fromPartition][_from][_operator].sub( _value ); } else { _allowedByPartition[_fromPartition][_from][_operator] = 0; } } _callPreTransferHooks( _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); require( _balanceOfByPartition[_from][_fromPartition] >= _value, EC_52_INSUFFICIENT_BALANCE ); bytes32 toPartition = PartitionUtils._getDestinationPartition( _data, _fromPartition ); _removeTokenFromPartition(_from, _fromPartition, _value); _addTokenToPartition(_to, toPartition, _value); _callPostTransferHooks( toPartition, _operator, _from, _to, _value, _data, _operatorData ); emit Transfer(_from, _to, _value); emit TransferByPartition( _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); if (toPartition != _fromPartition) { emit ChangedPartition(_fromPartition, toPartition, _value); } return toPartition; }
+COMMENT: @ dev transfer tokens from one address to another . @ param operator address which you want to send tokens from . @ param to the address which you want
+CODE: function _transferByDefaultPartition( address _operator, address _from, address _to, uint256 _value, bytes memory _data ) internal { _transferByPartition(defaultPartition, _operator, _from, _to, _value, _data, ""); }
+COMMENT: @ dev internal function that determines for a specific partition .
+CODE: function _removeTokenFromPartition( address _from, bytes32 _partition, uint256 _value ) internal { if (_value == 0) { return; } _balances[_from] = _balances[_from].sub(_value); _balanceOfByPartition[_from][_partition] = _balanceOfByPartition[_from][_partition] .sub(_value); totalSupplyByPartition[_partition] = totalSupplyByPartition[_partition].sub( _value ); if (totalSupplyByPartition[_partition] == 0 && _partition != defaultPartition) { _removePartitionFromTotalPartitions(_partition); } if (_balanceOfByPartition[_from][_partition] == 0) { uint256 index = _indexOfPartitionsOf[_from][_partition]; if (index == 0) { return; } bytes32 lastValue = _partitionsOf[_from][_partitionsOf[_from].length - 1];  adjust for 1-based indexing _indexOfPartitionsOf[_from][lastValue] = index; _partitionsOf[_from].pop(); _indexOfPartitionsOf[_from][_partition] = 0; } }
+COMMENT: @ dev add a specific partition for a specific partition . @ param to address of the to check . @ param value the amount of tokens to be added
+CODE: function _addTokenToPartition( address _to, bytes32 _partition, uint256 _value ) internal { if (_value == 0) { return; } _balances[_to] = _balances[_to].add(_value); if (_indexOfPartitionsOf[_to][_partition] == 0) { _partitionsOf[_to].push(_partition); _indexOfPartitionsOf[_to][_partition] = _partitionsOf[_to].length; } _balanceOfByPartition[_to][_partition] = _balanceOfByPartition[_to][_partition] .add(_value); if (_indexOfTotalPartitions[_partition] == 0) { _addPartitionToTotalPartitions(_partition); } totalSupplyByPartition[_partition] = totalSupplyByPartition[_partition].add( _value ); }
+COMMENT: @ dev adds a new total partition . @ param partition name of the partition .
+CODE: function _addPartitionToTotalPartitions(bytes32 _partition) internal { _totalPartitions.push(_partition); _indexOfTotalPartitions[_partition] = _totalPartitions.length; }
+COMMENT: @ dev remove value of a specific partition . @ param partition name of the partition .
+CODE: function _removePartitionFromTotalPartitions(bytes32 _partition) internal { uint256 index = _indexOfTotalPartitions[_partition]; if (index == 0) { return; } bytes32 lastValue = _totalPartitions[_totalPartitions.length - 1];  adjust for 1-based indexing _indexOfTotalPartitions[lastValue] = index; _totalPartitions.pop(); _indexOfTotalPartitions[_partition] = 0; }
+COMMENT: @ dev handles the contract extends a specific months due to the given operator . @ param from the address of the sender . @ param operator address of the
+CODE: function _callPreTransferHooks( bytes32 _fromPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal { address senderImplementation; senderImplementation = interfaceAddr(_from, AMP_TOKENS_SENDER); if (senderImplementation != address(0)) { IAmpTokensSender(senderImplementation).tokensToTransfer( msg.sig, _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); } bytes4 fromPartitionPrefix = PartitionUtils._getPartitionPrefix(_fromPartition); if (_isPartitionStrategy[fromPartitionPrefix]) { address fromPartitionValidatorImplementation; fromPartitionValidatorImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(fromPartitionPrefix) ); if (fromPartitionValidatorImplementation != address(0)) { IAmpPartitionStrategyValidator(fromPartitionValidatorImplementation) .tokensFromPartitionToValidate( msg.sig, _fromPartition, _operator, _from, _to, _value, _data, _operatorData ); } } }
+COMMENT: @ dev call through ds of a specific partition . @ param to the address of the partition . @ param operator address of the operator for individual address of
+CODE: function _callPostTransferHooks( bytes32 _toPartition, address _operator, address _from, address _to, uint256 _value, bytes memory _data, bytes memory _operatorData ) internal { bytes4 toPartitionPrefix = PartitionUtils._getPartitionPrefix(_toPartition); if (_isPartitionStrategy[toPartitionPrefix]) { address partitionManagerImplementation; partitionManagerImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(toPartitionPrefix) ); if (partitionManagerImplementation != address(0)) { IAmpPartitionStrategyValidator(partitionManagerImplementation) .tokensToPartitionToValidate( msg.sig, _toPartition, _operator, _from, _to, _value, _data, _operatorData ); } } else { require(toPartitionPrefix == ZERO_PREFIX, EC_5D_PARTITION_RESERVED); } address recipientImplementation; recipientImplementation = interfaceAddr(_to, AMP_TOKENS_RECIPIENT); if (recipientImplementation != address(0)) { IAmpTokensRecipient(recipientImplementation).tokensReceived( msg.sig, _toPartition, _operator, _from, _to, _value, _data, _operatorData ); } }
+COMMENT: @ dev sets amount as the allowance of spender over the partition parameter . @ param partition name of the partition . @ param token address for the address that
+CODE: function _approveByPartition( bytes32 _partition, address _tokenHolder, address _spender, uint256 _amount ) internal { require(_tokenHolder != address(0), EC_56_INVALID_SENDER); require(_spender != address(0), EC_58_INVALID_OPERATOR); _allowedByPartition[_partition][_tokenHolder][_spender] = _amount; emit ApprovalByPartition(_partition, _tokenHolder, _spender, _amount); if (_partition == defaultPartition) { emit Approval(_tokenHolder, _spender, _amount); } }
+COMMENT: is operator ( ) : returns true if operator is allowed to transfer ownership of token holder
+CODE: function _isOperator(address _operator, address _tokenHolder)
+COMMENT: @ dev returns whether the operator is allowed to manage all of the token holder . @ param partition name of the partition . @ param token address for which
+CODE: function _isOperatorForPartition( bytes32 _partition, address _operator, address _tokenHolder ) internal view returns (bool) { return (_isOperator(_operator, _tokenHolder) || _authorizedOperatorByPartition[_tokenHolder][_partition][_operator] || _callPartitionStrategyOperatorHook(_partition, _operator, _tokenHolder)); }
+COMMENT: @ notice calls the logic contract ' s name @ param partition name of the partition . @ param operator address of the token holder . @ param token holder
+CODE: function _callPartitionStrategyOperatorHook( bytes32 _partition, address _operator, address _tokenHolder ) internal view returns (bool) { bytes4 prefix = PartitionUtils._getPartitionPrefix(_partition); if (!_isPartitionStrategy[prefix]) { return false; } address strategyValidatorImplementation; strategyValidatorImplementation = interfaceAddr( address(this), PartitionUtils._getPartitionStrategyValidatorIName(prefix) ); if (strategyValidatorImplementation != address(0)) { return IAmpPartitionStrategyValidator(strategyValidatorImplementation) .isOperatorForPartitionScope(_partition, _operator, _tokenHolder); } return false; }
+COMMENT: mint function
+CODE: function _mint( address _operator, address _to, uint256 _value ) internal { require(_to != address(0), EC_57_INVALID_RECEIVER); _totalSupply = _totalSupply.add(_value); _addTokenToPartition(_to, defaultPartition, _value); _callPostTransferHooks( defaultPartition, _operator, address(0), _to, _value, "", "" ); emit Minted(_operator, _to, _value, ""); emit Transfer(address(0), _to, _value); emit TransferByPartition(bytes32(0), _operator, address(0), _to, _value, "", ""); }

@@ -23,12 +23,12 @@ allow spender to withdraw from your account , multiple times . to change the app
 @ dev the ownable constructor sets the original owner of the contract to the sender account .
 @ dev throws if called by any account other than the owner .
 @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
-pausable
-events
+Pause event
+Unpause event
 @ dev modifier to make a function callable only when the contract is paused .
 @ dev modifier to allow actions only when the contract is not paused
 @ dev called by the owner to pause , triggers stopped state
 @ dev called by the owner to unpause , returns to normal state
 transfer tokens send value tokens to to from your account @ param to the address of the recipient @ param value the amount to send
 @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
-total supply
+Voc Token function

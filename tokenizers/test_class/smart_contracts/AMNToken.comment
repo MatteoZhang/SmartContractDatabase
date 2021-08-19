@@ -14,8 +14,8 @@
 @ dev moves amount tokens from sender to recipient using the allowance mechanism . amount is then deducted from the caller ' s allowance . returns a boolean value indicating
 @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
 @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
-events
-events
+Ownership Transfer Authorization event
+Owner Update event
 @ dev returns the address of the current owner .
 @ notice return owner address
 @ notice set a new owner address
@@ -51,7 +51,7 @@ events
 @ dev emitted when token holder
 @ notice emitted when a collateral manager is changed
 event that tracks default extension contract address change
-erc223
+Minted event
 @ dev emitted when value tokens are moved from one account ( operator ) to another ( to ) . note that value may be zero .
 @ dev get total supply of token
 get the token balance for account token owner
@@ -97,4 +97,4 @@ is operator ( ) : returns true if operator is allowed to transfer ownership of t
 is operator ( ) : returns true if operator is allowed to transfer ownership of token holder
 @ dev returns whether the operator is allowed to manage all of the token holder . @ param partition name of the partition . @ param token address for which
 @ notice calls the logic contract ' s name @ param partition name of the partition . @ param operator address of the token holder . @ param token holder
-events
+mint function

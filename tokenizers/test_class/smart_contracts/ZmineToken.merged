@@ -1,0 +1,146 @@
+COMMENT: @ dev multiplies two numbers , throws on overflow .
+CODE: function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; assert(c / a == b); return c; }
+COMMENT: @ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+CODE: function div(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a / b; return c; }
+COMMENT: @ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+CODE: function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+COMMENT: @ dev adds two numbers , throws on overflow .
+CODE: function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; assert(c >= a); return c; }
+COMMENT: Ownership Transferred event
+CODE: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+COMMENT: @ dev the ownable constructor sets the original owner of the contract to the sender account .
+CODE: function Ownable() public { owner = msg.sender; }
+COMMENT: @ dev throws if called by any account other than the owner .
+CODE: modifier onlyOwner() { require(msg.sender == owner); _; }
+COMMENT: @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+CODE: function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+COMMENT: @ notice an event emitted when an account changes its delegate
+CODE: event AuthorizationSet(address indexed addressAuthorized, bool indexed authorization);
+COMMENT: Authorizable function
+CODE: function Authorizable() public { AuthorizationSet(msg.sender, true); authorized[msg.sender] = true; }
+COMMENT: @ notice throws if called by any account other than the owner .
+CODE: modifier onlyAuthorized() { require(authorized[msg.sender]); _; }
+COMMENT: @ notice set or delegator address @ param address address to gain @ param authorization address to set
+CODE: function setAuthorized(address addressAuthorized, bool authorization) public onlyOwner { require(authorized[addressAuthorized] != authorization); AuthorizationSet(addressAuthorized, authorization); authorized[addressAuthorized] = authorization; }
+COMMENT: @ notice emitted when implementation is eligible
+CODE: event WhiteListSet(address addressWhiteListed, bool whiteListStatus);
+COMMENT: @ dev implementation of getting the eligible sender
+CODE: function WhiteList() public { WhiteListSet(msg.sender, true); whiteListed[msg.sender] = true; }
+COMMENT: @ dev throws if called by any account other than the caller is the air of the user
+CODE: modifier onlyWhiteListed() { require(whiteListed[msg.sender]); _; }
+COMMENT: @ dev checks whether the caller is a market .
+CODE: function isWhiteListed(address _address) public view returns (bool) { return whiteListed[_address]; }
+COMMENT: @ dev set address of the eligible status @ param White the account to set the status of the caller must be approved the approved .
+CODE: function setWhiteListed(address addressWhiteListed, bool whiteListStatus) public onlyAuthorized { require(whiteListed[addressWhiteListed] != whiteListStatus); WhiteListSet(addressWhiteListed, whiteListStatus); whiteListed[addressWhiteListed] = whiteListStatus; }
+COMMENT: @ param who the address to query . @ return the balance of the specified address .
+CODE: function balanceOf(address who) public view returns (uint256);
+COMMENT: send value amount of tokens to address to
+CODE: function transfer(address to, uint256 value) public returns (bool);
+COMMENT: @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+CODE: event Transfer(address indexed from, address indexed to, uint256 value);
+COMMENT: @ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+CODE: function allowance(address owner, address spender) public view returns (uint256);
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+CODE: function transferFrom(address from, address to, uint256 value) public returns (bool);
+COMMENT: set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max
+CODE: function approve(address spender, uint256 value) public returns (bool);
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event Approval(address indexed owner, address indexed spender, uint256 value);
+COMMENT: @ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred . safe math . sub
+CODE: function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); Transfer(msg.sender, _to, _value); return true; }
+COMMENT: @ dev gets the balance of the specified address . @ param owner the address to query the the balance of . @ return an uint256 representing the amount owned
+CODE: function balanceOf(address _owner) public view returns (uint256 balance) { return balances[_owner]; }
+COMMENT: @ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you
+CODE: function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[_from]); require(_value <= allowed[_from][msg.sender]); balances[_from] = balances[_from].sub(_value); balances[_to] = balances[_to].add(_value); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); Transfer(_from, _to, _value); return true; }
+COMMENT: @ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+CODE: function approve(address _spender, uint256 _value) public returns (bool) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; }
+COMMENT: @ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param
+CODE: function allowance(address _owner, address _spender) public view returns (uint256 remaining) { return allowed[_owner][_spender]; }
+COMMENT: approve should be called when allowed [ spender ] 0 . to increment allowed value is better to use this function to avoid 2 calls ( and wait until the
+CODE: function increaseApproval (address _spender, uint _addedValue) public returns (bool success) { allowed[msg.sender][_spender] = allowed[msg.sender][_spender].add(_addedValue); Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+COMMENT: incrementally decrease approval , see https : github . com ethereum ei ps issues 738 allow decreasing too much , to prevent griefing via front running
+CODE: function decreaseApproval (address _spender, uint _subtractedValue) public returns (bool success) { uint oldValue = allowed[msg.sender][_spender]; if (_subtractedValue > oldValue) { allowed[msg.sender][_spender] = 0; } else { allowed[msg.sender][_spender] = oldValue.sub(_subtractedValue); } Approval(msg.sender, _spender, allowed[msg.sender][_spender]); return true; }
+COMMENT: @ return the time when the tokens are released .
+CODE: function TreasureBox(ZMINE _token, address _beneficiary, uint _releaseTime) public { require(_beneficiary != address(0)); token = _token; beneficiary = _beneficiary; releaseTime = _releaseTime; }
+COMMENT: @ notice claim nest
+CODE: function claim() external { require(available()); require(amount() > 0); token.transfer(beneficiary, amount()); }
+COMMENT: get the specified time when the crowdsale .
+CODE: function available() public view returns (bool) { return (now >= releaseTime); }
+COMMENT: @ return the amount of token that the owner has earned in the total supply .
+CODE: function amount() public view returns (uint256) { return token.balanceOf(this); }
+COMMENT: Set Destination event
+CODE: event SetDestination(address _address, address _destination);
+COMMENT: @ notice the event emitted when an arbitrary user sets the address is listed
+CODE: event SetExchanger(address _address, bool _isExchanger);
+COMMENT: @ dev log entry
+CODE: event AirDrop(address _address, uint _value);
+COMMENT: create a list
+CODE: function AirDropToken () public { held[owner] = true; holdersList.length++; holdersList[holdersList.length - 1] = owner; }
+COMMENT: add Holders List function
+CODE: function addHoldersList (address _address) private { if (held[_address] == false) { held[_address] = true; holdersList.length++; holdersList[holdersList.length - 1] = _address; holdersIndex[_address] = holdersList.length - 1; } }
+COMMENT: @ dev set the address of the given address @ param address the address to check
+CODE: function setTreasureBox (address _address, bool _status) public onlyAuthorized { require(_address != address(0)); require(isTreasureBox[_address] != _status); isTreasureBox[_address] = _status; }
+COMMENT: @ notice set the underlying asset .
+CODE: function setExchanger(address _address, bool _isExchanger) external onlyAuthorized { require(_address != address(0)); require(isAnExchanger[_address] != _isExchanger); addHoldersList(_address); isAnExchanger[_address] = _isExchanger; SetExchanger(_address, _isExchanger); }
+COMMENT: allow owner to move tokens from the system
+CODE: function setAirDropDestination(address _destination) external { require(_destination != msg.sender); addHoldersList(_destination); airDropDestinations[msg.sender] = _destination; SetDestination(msg.sender, _destination); }
+COMMENT: wrapper function to allow destination address to change this function @ param destination address of destination contract , in case of some agreement
+CODE: function setAirDropDestinationAndApprove(address _destination, address _spender, uint _value) external { require(_destination != msg.sender); addHoldersList(_destination); allowed[msg.sender][_spender] = _value; airDropDestinations[msg.sender] = _destination; Approval(msg.sender, _spender, _value); SetDestination(msg.sender, _destination); }
+COMMENT: @ dev transfer token to a specified address . @ param to the address to transfer to . @ param value the amount to be transferred . @ return true
+CODE: function transfer(address _to, uint256 _value) public returns (bool) { require(super.transfer(_to, _value)); addHoldersList(_to); return true; }
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+CODE: function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(super.transferFrom(_from, _to, _value)); addHoldersList(_to); return true; }
+COMMENT: multi transfer function
+CODE: function multiTransfer(address[] _address, uint[] _value) public returns (bool) { for (uint i = 0; i < _address.length; i++) { transfer(_address[i], _value[i]); } return true; }
+COMMENT: air Drop function
+CODE: function airDrop(uint _value, uint _minimum, uint _maximum, uint _txFee) external onlyOwner { uint sumTotal = 0; uint i; uint[] memory airdropAmount = new uint[](holdersList.length); for (i = 0; i < holdersList.length; i++) { bool validUser = holdersList[i] != owner && !isTreasureBox[holdersList[i]]; bool qualifiedUser = balances[holdersList[i]] <= _maximum && (balances[holdersList[i]] >= _minimum || isAnExchanger[airDropDestinations[holdersList[i]]] || isAnExchanger[holdersList[i]]); if ( validUser && qualifiedUser ) { sumTotal = sumTotal.add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum and set destinatios && who have set destinations to exchanger and have tokens <= _maximum airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]] = airdropAmount[holdersIndex[airDropDestinations[holdersList[i]]]].add(balances[holdersList[i]]);  who have tokens >= _minimum and <= _maximum && exchanger and token <= _maximum airdropAmount[i] = airdropAmount[i].add(balances[holdersList[i]]); } } } for (i = 0; i < holdersList.length; i++) { if (airdropAmount[i] > 0) { if (_value.mul(airdropAmount[i]).div(sumTotal) > _txFee) { uint tokens = _value.mul(airdropAmount[i]).div(sumTotal).sub(_txFee); balances[owner] = balances[owner].sub(tokens); balances[holdersList[i]] = balances[holdersList[i]].add(tokens);  AirDrop(owner, holder, tokens); } } } }
+COMMENT: ZMINE function
+CODE: function ZMINE() public { balances[owner] = totalSupply; Transfer(address(0x0), owner, totalSupply); }
+COMMENT: @ notice burn tokens @ param amount the amount of tokens to burn
+CODE: function burn(uint _amount) external onlyOwner { require(balances[owner] >= _amount); balances[owner] = balances[owner] - _amount; totalSupply = totalSupply - _amount; Transfer(owner, address(0x0), _amount); }
+COMMENT: @ dev lets the exchange rate from underlying to buyer
+CODE: function updateRate(uint _rate) public onlyAuthorized { require(rate != _rate); rate = _rate; }
+COMMENT: @ return the current exchange rate
+CODE: function getRate() public view returns (uint) { return rate; }
+COMMENT: @ dev emitted when token hard is transferred from the recipient .
+CODE: event TokenTransferForFounder(address _recipient, uint _value, address box1, address box2);
+COMMENT: Founder Threader function
+CODE: function FounderThreader (ZMINE _token, address[] _founders) public { token = ZMINE(_token); for (uint i = 0; i < _founders.length; i++) { isFounder[_founders[i]] = true; } }
+COMMENT: @ dev see { ierc20 transfer } . unlike send , recipient is not required to implement the token contracts status .
+CODE: function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(_tokens >= minTx); require(isFounder[_recipient]);  can open 2018-07-08 09+07:00  can open 2019-01-08 09+07:00 token.setTreasureBox(box1, true); token.setTreasureBox(box2, true);  33 % for now  33 % for box1  34 % for box2 remain = remain.sub(_tokens); TokenTransferForFounder(_recipient, _tokens, box1, box2); }
+COMMENT: @ notice the event emitted when the owner is sold
+CODE: event TokenSold(address _recipient, uint _value, uint _tokens, uint _rate);
+COMMENT: @ notice the event emitted when the owner has been sold
+CODE: event TokenSold(address _recipient, uint _tokens);
+COMMENT: @ dev notifies the contract in the whitelist . @ param token contract address of the token contract
+CODE: function PreSale (ZMINE _token, RateContract _rateContract, WhiteList _whitelist) public { token = ZMINE(_token); rateContract = RateContract(_rateContract); whitelist = WhiteList(_whitelist); }
+COMMENT: owner can transfer out any accidentally sent erc20 tokens
+CODE: function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(available()); remain = remain.sub(_tokens); token.transferFrom(owner, _recipient, _tokens); TokenSold(_recipient, _tokens); }
+COMMENT: function to allow admin to claim other erc20 tokens sent to the contract ( by mistake ) admin cannot transfer out reward tokens from this smart contract
+CODE: function sale(address _recipient, uint _value, uint _rate) private { require(_recipient != address(0)); require(available()); require(isWhiteListed(_recipient)); require(_value >= minTx && _value <= maxTx); uint tokens = _rate.mul(_value).div(1 ether); remain = remain.sub(tokens); token.transferFrom(owner, _recipient, tokens); owner.transfer(_value); TokenSold(_recipient, _value, tokens, _rate); }
+COMMENT: @ return the number of token units a buyer gets per wei .
+CODE: function rate() public view returns (uint) { return rateContract.getRate(); }
+COMMENT: get true iff the specified name is available for the specified address
+CODE: function available() public view returns (bool) { return (now > startDate && now < stopDate); }
+COMMENT: check whether an address is in the whitelist
+CODE: function isWhiteListed(address _address) public view returns (bool) { return whitelist.isWhiteListed(_address); }
+COMMENT: allow eth to be sent to this contract
+CODE: function() external payable { sale(msg.sender, msg.value, rate()); }
+COMMENT: @ notice the event emitted when the owner is sold
+CODE: event TokenSold(address _recipient, uint _value, uint _tokens, uint _rate);
+COMMENT: Increase Hard Cap event
+CODE: event IncreaseHardCap(uint _amount);
+COMMENT: ICO Sale function
+CODE: function ICOSale(ZMINE _token, RateContract _rateContract, WhiteList _whitelistPRE, WhiteList _whitelistICO) public { token = ZMINE(_token); rateContract = RateContract(_rateContract); whitelistPRE = WhiteList(_whitelistPRE); whitelistICO = WhiteList(_whitelistICO); }
+COMMENT: @ notice increase the amount of cap . @ param amount cap cap .
+CODE: function increaseHardCap(uint _amount) external onlyOwner { hardCap = hardCap.add(_amount); remain = remain.add(_amount); IncreaseHardCap(_amount); }
+COMMENT: function to allow admin to claim other erc20 tokens sent to the contract ( by : 1 ) {
+CODE: function sale(address _recipient, uint _value, uint _rate) private { require(available()); require(isWhiteListed(_recipient)); require(_value >= minTx && _value <= maxTx); uint tokens = _rate.mul(_value).div(1 ether); remain = remain.sub(tokens); token.transferFrom(owner, _recipient, tokens); owner.transfer(_value); TokenSold(_recipient, _value, tokens, _rate); }
+COMMENT: @ return the number of token units a buyer gets per wei .
+CODE: function rate() public view returns (uint) { return rateContract.getRate(); }
+COMMENT: get true iff the specified name is available for the specified address
+CODE: function available () public view returns (bool) { return (now > startDate && now < stopDate); }
+COMMENT: @ dev check whether an address is authorized or not .
+CODE: function isWhiteListed (address _address) public view returns(bool) { return (whitelistPRE.isWhiteListed(_address) || (whitelistICO.isWhiteListed(_address))); }
+COMMENT: allow eth to be sent to this contract
+CODE: function() external payable { sale(msg.sender, msg.value, rate()); }

@@ -1,0 +1,136 @@
+COMMENT: returns whether the target address is a contract @ dev this function will return false if invoked during the constructor of a contract , as the code is not actually
+CODE: function isContract(address addr) internal view returns (bool) { uint256 size; assembly { size := extcodesize(addr) } return size > 0; }
+COMMENT: @ dev multiplies two numbers , throws on overflow .
+CODE: function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; assert(c / a == b); return c; }
+COMMENT: @ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+CODE: function div(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a / b; return c; }
+COMMENT: @ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+CODE: function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+COMMENT: @ dev adds two numbers , throws on overflow .
+CODE: function add(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a + b; assert(c >= a); return c; }
+COMMENT: Ownership Transferred event
+CODE: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+COMMENT: @ dev the ownable constructor sets the original owner of the contract to the sender account .
+CODE: function Ownable() public { owner = msg.sender; }
+COMMENT: @ dev throws if called by any account other than the owner .
+CODE: modifier onlyOwner() { require(msg.sender == owner); _; }
+COMMENT: @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+CODE: function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+COMMENT: @ dev emitted when token id token is transferred from from to to .
+CODE: event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
+COMMENT: @ dev emitted when owner enables approved to manage the token id token .
+CODE: event Approval(address indexed _owner, address indexed _approved, uint256 _tokenId);
+COMMENT: @ dev emitted when owner enables or disables ( approved ) operator to manage all of its assets .
+CODE: event ApprovalForAll(address indexed _owner, address indexed _operator, bool _approved);
+COMMENT: @ param owner the address from which the balance will be retrieved @ return the balance
+CODE: function balanceOf(address _owner) public view returns (uint256 _balance);
+COMMENT: @ dev returns the owner of the nft specified by token id .
+CODE: function ownerOf(uint256 _tokenId) public view returns (address _owner);
+COMMENT: @ dev returns whether the specified token exists . @ param token id uint256 id of the token to query the existence of @ return bool whether the token exists
+CODE: function exists(uint256 _tokenId) public view returns (bool _exists);
+COMMENT: @ dev gives permission to to to transfer token id token to another account . the approval is cleared when the token is transferred . only a single account can
+CODE: function approve(address _to, uint256 _tokenId) public;
+COMMENT: @ dev returns the account approved for token id token . requirements : token id must exist .
+CODE: function getApproved(uint256 _tokenId) public view returns (address _operator);
+COMMENT: @ dev approve or remove operator as an operator for the caller . operators can call { transfer from } or { safe transfer from } for any token owned
+CODE: function setApprovalForAll(address _operator, bool _approved) public;
+COMMENT: @ dev returns if the operator is allowed to manage all of the assets of owner . see { set approval for all }
+CODE: function isApprovedForAll(address _owner, address _operator) public view returns (bool);
+COMMENT: @ dev transfers a specific nft ( token id ) from one account ( from ) to another ( to ) . requirements : if the caller is not from
+CODE: function transferFrom(address _from, address _to, uint256 _tokenId) public;
+COMMENT: @ dev transfers a specific nft ( token id ) from one account ( from ) to another ( to ) . requirements : from , to cannot be zero
+CODE: function safeTransferFrom(address _from, address _to, uint256 _tokenId) public;
+COMMENT: @ dev safely transfers token id token from from to to , checking first that contract recipients are aware of the erc721 protocol to prevent tokens from being forever locked
+CODE: function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) public;
+COMMENT: total Supply function
+CODE: function totalSupply() public view returns (uint256);
+COMMENT: @ dev returns a token id owned by owner at a given index of its token list . use along with { balance of } to enumerate all of owner
+CODE: function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256 _tokenId);
+COMMENT: @ dev returns a token id at a given index of all the tokens stored by the contract . use along with { total supply } to enumerate all tokens
+CODE: function tokenByIndex(uint256 _index) public view returns (uint256);
+COMMENT: @ dev returns the name of the token .
+CODE: function name() public view returns (string _name);
+COMMENT: @ dev returns the symbol of the token , usually a shorter version of the name .
+CODE: function symbol() public view returns (string _symbol);
+COMMENT: @ dev returns the uniform resource identifier ( uri ) for token id token .
+CODE: function tokenURI(uint256 _tokenId) public view returns (string);
+COMMENT: @ dev takes a new nft
+CODE: function takeOwnership(uint256 _tokenId) public;
+COMMENT: @ dev transfers a specific nft ( token id ) from one account ( to ) to another ( to ) . requirements : if the caller is not token
+CODE: function transfer(address _to, uint256 _tokenId) public;
+COMMENT: @ dev returns the amount of tokens owned by an @ param owner owner
+CODE: function tokensOf(address _owner) public view returns (uint256[]);
+COMMENT: @ dev throws if called by any account other than the owner .
+CODE: modifier onlyOwnerOf(uint256 _tokenId) { require(ownerOf(_tokenId) == msg.sender); _; }
+COMMENT: @ dev checks if token id can transfer is the token id
+CODE: modifier canTransfer(uint256 _tokenId) { require(isApprovedOrOwner(msg.sender, _tokenId)); _; }
+COMMENT: @ dev gets the balance of the specified address @ param owner address to query the balance of @ return uint256 representing the amount owned by the passed address
+CODE: function balanceOf(address _owner) public view returns (uint256) { require(_owner != address(0)); return ownedTokensCount[_owner]; }
+COMMENT: @ dev gets the owner of the specified token id @ param token id uint256 id of the token to query the owner of @ return address currently marked as
+CODE: function ownerOf(uint256 _tokenId) public view returns (address) { address owner = tokenOwner[_tokenId]; require(owner != address(0)); return owner; }
+COMMENT: @ dev returns whether the specified token exists . @ param token id uint256 id of the token to query the existence of @ return bool whether the token exists
+CODE: function exists(uint256 _tokenId) public view returns (bool) { address owner = tokenOwner[_tokenId]; return owner != address(0); }
+COMMENT: @ dev approves another address to transfer the given token id the zero address indicates there is no approved address . there can only be one approved address per token
+CODE: function approve(address _to, uint256 _tokenId) public { address owner = ownerOf(_tokenId); require(_to != owner); require(msg.sender == owner || isApprovedForAll(owner, msg.sender)); if (getApproved(_tokenId) != address(0) || _to != address(0)) { tokenApprovals[_tokenId] = _to; Approval(owner, _to, _tokenId); } }
+COMMENT: @ dev gets the approved address for a token id , or zero if no address set reverts if the token id does not exist . @ param token id
+CODE: function getApproved(uint256 _tokenId) public view returns (address) { return tokenApprovals[_tokenId]; }
+COMMENT: @ dev sets or unsets the approval of a given operator an operator is allowed to transfer all tokens of the sender on their behalf @ param to operator address
+CODE: function setApprovalForAll(address _to, bool _approved) public { require(_to != msg.sender); operatorApprovals[msg.sender][_to] = _approved; ApprovalForAll(msg.sender, _to, _approved); }
+COMMENT: @ dev tells whether an operator is approved by a given owner . @ param owner owner address which you want to query the approval of @ param operator operator
+CODE: function isApprovedForAll(address _owner, address _operator) public view returns (bool) { return operatorApprovals[_owner][_operator]; }
+COMMENT: @ dev transfers the ownership of a given token id to another address usage of this method is discouraged , use safe transfer from whenever possible requires the msg from
+CODE: function transferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId) { require(_from != address(0)); require(_to != address(0)); clearApproval(_from, _tokenId); removeTokenFrom(_from, _tokenId); addTokenTo(_to, _tokenId); Transfer(_from, _to, _tokenId); }
+COMMENT: @ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement { ierc721receiver on erc721received }
+CODE: function safeTransferFrom(address _from, address _to, uint256 _tokenId) public canTransfer(_tokenId) { safeTransferFrom(_from, _to, _tokenId, ""); }
+COMMENT: @ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement on erc721received , which is
+CODE: function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) public canTransfer(_tokenId) { transferFrom(_from, _to, _tokenId); require(checkAndCallSafeTransfer(_from, _to, _tokenId, _data)); }
+COMMENT: @ dev returns whether the given spender can transfer a given token id @ param spender address of the spender to query @ param token id uint256 id of the
+CODE: function isApprovedOrOwner(address _spender, uint256 _tokenId) internal view returns (bool) { address owner = ownerOf(_tokenId); return _spender == owner || getApproved(_tokenId) == _spender || isApprovedForAll(owner, _spender); }
+COMMENT: @ dev internal function to mint a new token . reverts if the given token id already exists . @ param to address the beneficiary that will own the minted
+CODE: function _mint(address _to, uint256 _tokenId) internal { require(_to != address(0)); addTokenTo(_to, _tokenId); Transfer(address(0), _to, _tokenId); }
+COMMENT: @ dev internal function to burn a specific token reverts if the token does not exist @ param token id uint256 id of the token being burned by the msg
+CODE: function _burn(address _owner, uint256 _tokenId) internal { clearApproval(_owner, _tokenId); removeTokenFrom(_owner, _tokenId); Transfer(_owner, address(0), _tokenId); }
+COMMENT: @ dev internal function to clear current approval of a given token id . @ param owner owner of the token id of the token being transferred @ param token
+CODE: function clearApproval(address _owner, uint256 _tokenId) internal { require(ownerOf(_tokenId) == _owner); if (tokenApprovals[_tokenId] != address(0)) { tokenApprovals[_tokenId] = address(0); Approval(_owner, address(0), _tokenId); } }
+COMMENT: @ dev internal function to add a token to this extension ' s ownership tracking data structures . @ param to address representing the new owner of the given token
+CODE: function addTokenTo(address _to, uint256 _tokenId) internal { require(tokenOwner[_tokenId] == address(0)); tokenOwner[_tokenId] = _to; ownedTokensCount[_to] = ownedTokensCount[_to].add(1); }
+COMMENT: @ dev internal function to remove a token id from the list of a given address @ param from address representing the previous owner of the given token id @
+CODE: function removeTokenFrom(address _from, uint256 _tokenId) internal { require(ownerOf(_tokenId) == _from); ownedTokensCount[_from] = ownedTokensCount[_from].sub(1); tokenOwner[_tokenId] = address(0); }
+COMMENT: @ dev internal function to invoke { ierc721receiver on erc721received } on a target address . the call is not executed if the target address is not a contract .
+CODE: function checkAndCallSafeTransfer(address _from, address _to, uint256 _tokenId, bytes _data) internal returns (bool) { if (!_to.isContract()) { return true; } bytes4 retval = ERC721Receiver(_to).onERC721Received(_from, _tokenId, _data); return (retval == ERC721_RECEIVED); }
+COMMENT: @ dev whenever an { ierc721 } token id token is transferred to this contract via { ierc721 safe transfer from } by from . this function must return the
+CODE: function onERC721Received(address _from, uint256 _tokenId, bytes _data) public returns(bytes4);
+COMMENT: @ dev function to ERC721Token the name parameter for erc20 token symbol }
+CODE: function ERC721Token(string _name, string _symbol) public { name_ = _name; symbol_ = _symbol; }
+COMMENT: @ return the name of the token .
+CODE: function name() public view returns (string) { return name_; }
+COMMENT: @ return the symbol of the token .
+CODE: function symbol() public view returns (string) { return symbol_; }
+COMMENT: @ dev returns an uri for a given token id throws if the token id does not exist . may return an empty string . @ param token id uint256
+CODE: function tokenURI(uint256 _tokenId) public view returns (string) { require(exists(_tokenId)); return tokenURIs[_tokenId]; }
+COMMENT: @ dev internal function to set the token uri for a given token reverts if the token id does not exist @ param token id uint256 id of the token
+CODE: function _setTokenURI(uint256 _tokenId, string _uri) internal { require(exists(_tokenId)); tokenURIs[_tokenId] = _uri; }
+COMMENT: @ dev gets the token id at a given index of the tokens list of the requested owner @ param owner address owning the tokens list to be accessed @
+CODE: function tokenOfOwnerByIndex(address _owner, uint256 _index) public view returns (uint256) { require(_index < balanceOf(_owner)); return ownedTokens[_owner][_index]; }
+COMMENT: @ dev gets the total amount of tokens stored by the contract @ return uint256 representing the total amount of tokens
+CODE: function totalSupply() public view returns (uint256) { return allTokens.length; }
+COMMENT: @ dev gets the token id at a given index of all the tokens in this contract reverts if the index is greater or equal to the total number of
+CODE: function tokenByIndex(uint256 _index) public view returns (uint256) { require(_index < totalSupply()); return allTokens[_index]; }
+COMMENT: @ dev internal function to add a token to this extension ' s ownership tracking data structures . @ param to address representing the new owner of the given token
+CODE: function addTokenTo(address _to, uint256 _tokenId) internal { super.addTokenTo(_to, _tokenId); uint256 length = ownedTokens[_to].length; ownedTokens[_to].push(_tokenId); ownedTokensIndex[_tokenId] = length; }
+COMMENT: @ dev internal function to remove a token id from the list of a given address @ param from address representing the previous owner of the given token id @
+CODE: function removeTokenFrom(address _from, uint256 _tokenId) internal { super.removeTokenFrom(_from, _tokenId); uint256 tokenIndex = ownedTokensIndex[_tokenId]; uint256 lastTokenIndex = ownedTokens[_from].length.sub(1); uint256 lastToken = ownedTokens[_from][lastTokenIndex]; ownedTokens[_from][tokenIndex] = lastToken; ownedTokens[_from][lastTokenIndex] = 0; ownedTokens[_from].length--; ownedTokensIndex[_tokenId] = 0; ownedTokensIndex[lastToken] = tokenIndex; }
+COMMENT: @ dev internal function to mint a new token reverts if the given token id already exists @ param to the address that will own the minted token @ param
+CODE: function _mint(address _to, uint256 _tokenId) internal { super._mint(_to, _tokenId); allTokensIndex[_tokenId] = allTokens.length; allTokens.push(_tokenId); }
+COMMENT: @ dev internal function to burn a specific token reverts if the token does not exist @ param owner owner of the token to burn @ param token id uint256
+CODE: function _burn(address _owner, uint256 _tokenId) internal { super._burn(_owner, _tokenId); if (bytes(tokenURIs[_tokenId]).length != 0) { delete tokenURIs[_tokenId]; } uint256 tokenIndex = allTokensIndex[_tokenId]; uint256 lastTokenIndex = allTokens.length.sub(1); uint256 lastToken = allTokens[lastTokenIndex]; allTokens[tokenIndex] = lastToken; allTokens[lastTokenIndex] = 0; allTokens.length--; allTokensIndex[_tokenId] = 0; allTokensIndex[lastToken] = tokenIndex; }
+COMMENT: @ dev function to mint tokens .
+CODE: function DeusToken() public ERC721Token("DeusETH Token", "DEUS") { }
+COMMENT: @ dev safely transfers the ownership of a given token id to another address if the target address is a contract , it must implement { ierc721receiver on erc721received }
+CODE: function safeTransferFromWithData(address from, address to, uint256 tokenId, bytes data) public { return super.safeTransferFrom(from, to, tokenId, data); }
+COMMENT: @ dev function to mint tokens @ param to the address that will receive the minted tokens . @ param token id uint256 id of the minted token to mint
+CODE: function mint(address _to, uint256 _tokenId) public onlyOwner { super._mint(_to, _tokenId); }
+COMMENT: @ dev burn tokens . see burn
+CODE: function burn(address _owner, uint256 _tokenId) public onlyOwner { super._burn(_owner, _tokenId); }
+COMMENT: @ dev set a distinct uri ( rfc 3986 ) for a given token id . @ param token id uint256 id of the token type id substitution mechanism https
+CODE: function setTokenURI(uint256 _tokenId, string _uri) public onlyOwner { super._setTokenURI(_tokenId, _uri); }

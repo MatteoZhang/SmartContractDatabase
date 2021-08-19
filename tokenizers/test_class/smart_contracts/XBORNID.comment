@@ -16,7 +16,7 @@ set allowance for other address allows spender to spend no more than value token
 @ param owner the address from which the balance will be retrieved @ return the balance
 @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
 @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
-events
+Distr event
 @ dev emitted during finish minting
 @ dev emitted when value tokens are burnt from one account ( burner ) @ param burner address which burned tokens @ param value amount of tokens burned
 @ dev tokens can be minted only before minting finished .
