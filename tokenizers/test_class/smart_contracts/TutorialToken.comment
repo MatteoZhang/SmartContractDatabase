@@ -1,3 +1,4 @@
+event
 @ dev the ownable constructor sets the original owner of the contract to the sender account .
 @ dev throws if called by any account other than the owner .
 @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .

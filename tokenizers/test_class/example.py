@@ -1,6 +1,6 @@
 d1 = {
     "0": [
-        "@ dev multiply tow integers"
+        "@ dev multiplies two numbers , throws on overflow ."
     ],
     "1": [
         "@ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b"
@@ -12,98 +12,116 @@ d1 = {
         "@ dev adds two numbers , throws on overflow ."
     ],
     "4": [
-        "@ dev returns the integer division of two unsigned integers , reverting on division by zero . the result is rounded towards zero . counterpart to solidity ' s operator"
+        "@ param owner the address from which the balance will be retrieved @ return the balance"
     ],
     "5": [
-        "@ dev returns the subtraction of two unsigned integers , reverting on overflow ( when the result is negative ) . counterpart to solidity ' s operator . requirements :"
+        "send value amount of tokens to address to"
     ],
     "6": [
-        "@ dev returns the greater of two numbers ."
+        "get the address to query ."
     ],
     "7": [
-        "@ dev returns the unlockable of two numbers ."
+        "send value amount of tokens to address to"
     ],
     "8": [
-        "@ dev saftey logic ."
-    ],
-    "9": [
-        "@ param who the address to query . @ return the balance of the specified address ."
-    ],
-    "10": [
-        "@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred ."
-    ],
-    "11": [
         "@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero ."
     ],
-    "12": [
-        "@ dev fix for the erc20 short address attack ."
+    "9": [
+        "@ param owner the address of the account owning tokens @ param spender the address of the account able to transfer the tokens @ return amount of constant allowed value"
     ],
-    "13": [
-        "@ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred ."
-    ],
-    "14": [
-        "what is the balance of a particular account ?"
-    ],
-    "15": [
-        "@ dev function to check the amount of tokens than an owner has allowed to a spender . @ param owner the address which owns the funds . @ param"
-    ],
-    "16": [
-        "@ dev erc20 transfer from , modified such that an allowance of max uint represents an unlimited amount . @ param from address to transfer from . @ param to"
-    ],
-    "17": [
-        "@ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . this method is included for erc20 compatibility . increase allowance"
-    ],
-    "18": [
-        "@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance ."
-    ],
-    "19": [
-        "@ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you"
-    ],
-    "20": [
-        "allow spender to withdraw from your account , multiple times . to change the approve amount you first have to reduce the addresses allowance to zero by calling approve ("
-    ],
-    "21": [
-        "@ dev function to check the amount of tokens than an owner allowed to a spender . @ param owner address the address which owns the funds . @ param"
-    ],
-    "22": [
-        "@ dev the ownable constructor sets the original owner of the contract to the sender account ."
-    ],
-    "23": [
-        "@ dev throws if called by any account other than the owner ."
-    ],
-    "24": [
-        "@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to ."
-    ],
-    "25": [
-        "pausable"
-    ],
-    "26": [
-        "events"
-    ],
-    "27": [
-        "@ dev modifier to make a function callable only when the contract is paused ."
-    ],
-    "28": [
-        "@ dev modifier to allow actions only when the contract is not paused"
-    ],
-    "29": [
-        "@ dev called by the owner to pause , triggers stopped state"
-    ],
-    "30": [
-        "@ dev called by the owner to unpause , returns to normal state"
-    ],
-    "31": [
-        "transfer tokens send value tokens to to from your account @ param to the address of the recipient @ param value the amount to send"
-    ],
-    "32": [
+    "10": [
         "@ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to"
     ],
+    "11": [
+        "set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max"
+    ],
+    "12": [
+        "@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance ."
+    ],
+    "13": [
+        "@ dev distr token transfer @ param to the address of the sender @ param value the amount of token to be transferred @ return true if the given value"
+    ],
+    "14": [
+        "@ return total amount of tokens"
+    ],
+    "15": [
+        "@ param owner the address from which the balance will be retrieved @ return the balance"
+    ],
+    "16": [
+        "@ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero ."
+    ],
+    "17": [
+        "@ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance ."
+    ],
+    "18": [
+        "events"
+    ],
+    "19": [
+        "@ dev emitted during finish minting"
+    ],
+    "20": [
+        "@ dev emitted when value tokens are burnt from one account ( burner ) @ param burner address which burned tokens @ param value amount of tokens burned"
+    ],
+    "21": [
+        "@ dev tokens can be minted only before minting finished ."
+    ],
+    "22": [
+        "@ dev throws if called by any account other than the owner ."
+    ],
+    "23": [
+        "@ dev throws if called by any account other than the blacklist"
+    ],
+    "24": [
+        "@ dev gets the balance of database"
+    ],
+    "25": [
+        "@ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to ."
+    ],
+    "26": [
+        "@ notice distribution tokens and nothing the function"
+    ],
+    "27": [
+        "@ dev private function to distr alpaca"
+    ],
+    "28": [
+        "@ dev fallback function to accept eth . goblins will send eth back the pool ."
+    ],
+    "29": [
+        "@ dev get investor staking contract ."
+    ],
+    "30": [
+        "@ dev gets the balance of the specified address . @ param owner the address to query the the balance of . @ return an uint256 representing the amount owned"
+    ],
+    "31": [
+        "mitigates the erc20 short address attack"
+    ],
+    "32": [
+        "@ dev transfer token for a specified address @ param to the address to transfer to . @ param amount the amount to be transferred ."
+    ],
     "33": [
-        "total supply"
+        "@ dev moves amount tokens from sender to recipient using the allowance mechanism . amount is then deducted from the caller ' s allowance . returns a boolean value indicating"
+    ],
+    "34": [
+        "allow spender to withdraw from your account , multiple times . to change the approve amount you first have to reduce the addresses allowance to zero by calling approve ("
+    ],
+    "35": [
+        "@ dev function to check the amount of tokens that an owner allowed to a spender . @ param owner address the address which owns the funds . @ param"
+    ],
+    "36": [
+        "@ param token address the address of the token contract @ return the token address"
+    ],
+    "37": [
+        "@ dev withdraw ether from contract @ param ether address uint256 amount of ether transfer"
+    ],
+    "38": [
+        "@ dev burns a specific amount of tokens . @ param value the amount of token to be burned . no need to require value < total supply , since"
+    ],
+    "39": [
+        "@ dev withdraw ether to withdraw tokens from contract"
     ]
 }
 d2 = {}
-file_path = "smart_contracts/VocToken.comment"
+file_path = "smart_contracts/SiaCashCoin.comment"
 
 
 def merge_dict(d1, d2, file_path):
