@@ -26,14 +26,14 @@ def combine_lines(c_line, m_line, dir_c, dir_m):
             if len(world_list) <= 2:
                 code_list = m_line[cnt].split()
                 flag = 0
+                sub_list = []
                 for element in code_list:
                     flag += 1
                     if element == "(":
                         sub_list = code_list[0:flag]
-                c_line[cnt] = " ".join(sub_list[1:-1]) + " " + sub_list[0]
-
-    with open(dir_c, "w") as f:
-        f.writelines(c_lines)
+                print(c_line[cnt])
+                c_line[cnt] = " ".join(sub_list[1:-1]) + " " + sub_list[0] + "\n"
+                print(c_line[cnt])
 
 
 if __name__ == '__main__':
