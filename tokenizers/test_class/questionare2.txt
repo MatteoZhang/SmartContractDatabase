@@ -1,0 +1,92 @@
+COMMENT: @ dev check the value of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param owner address the address which
+CODE: function allowanceByPartition( bytes32 _partition, address _owner, address _spender ) external view returns (uint256) { return _allowedByPartition[_partition][_owner][_spender]; }
+COMMENT: @ dev sets new manager as the manager for new manager . @ dev governance function called by the delegator manager @ param addr is the address of the new
+CODE: function setManager(address _addr, address _newManager) external virtual;
+COMMENT: @ dev delegate manager address to a manager @ param new ERC1820REGISTRY the new ERC1820REGISTRY manager address
+CODE: function delegateManagement(address _newManager) internal { ERC1820REGISTRY.setManager(address(this), _newManager); }
+COMMENT: @ notice return owner address
+CODE: function authorizedNewOwner() public view returns (address) { return _authorizedNewOwner; }
+COMMENT: @ dev sets the implementation address of the proxy . @ param Label the address of the new implementation . @ param implementation the address of the contract to be
+CODE: function setInterfaceImplementation( string memory _interfaceLabel, address _implementation ) internal { bytes32 interfaceHash = keccak256(abi.encodePacked(_interfaceLabel)); ERC1820REGISTRY.setInterfaceImplementer( address(this), interfaceHash, _implementation ); }
+COMMENT: @ dev emitted when an option contract changes
+CODE: event ChangedPartition( bytes32 indexed fromPartition, bytes32 indexed toPartition, uint256 value );
+COMMENT: Ownership Transfer Authorization event
+CODE: event OwnershipTransferAuthorization(address indexed authorizedAddress);
+COMMENT: @ dev returns the remaining number of tokens that spender will be allowed to spend on behalf of owner through { transfer from } . this is zero by default
+CODE: function allowance(address owner, address spender)
+COMMENT: @ notice send value token to to from from on the condition it is approved by from @ param from the address of the sender @ param to the address
+CODE: function transferFrom( address from, address to, uint256 value ) external returns (bool success);
+COMMENT: @ dev atomically decreases the allowance granted to spender by the caller . this is an alternative to { approve } that can be used as a mitigation for problems
+CODE: function decreaseAllowance(address _spender, uint256 _subtractedValue)
+COMMENT: @ dev transfer tokens from one address to another . note that while this function emits an approval event , this is not required as per the specification , and
+CODE: function transferFrom(address _from, address _to, uint256 _value) returns (bool success) { if (balances[_from] >= _value && allowed[_from][msg.sender] >= _value && _value > 0) { balances[_to] += _value; balances[_from] -= _value; allowed[_from][msg.sender] -= _value; Transfer(_from, _to, _value); return true; } else { return false; } } function balanceOf(address _owner) constant returns (uint256 balance) { return balances[_owner]; } function approve(address _spender, uint256 _value) returns (bool success) { allowed[msg.sender][_spender] = _value; Approval(msg.sender, _spender, _value); return true; } function allowance(address _owner, address _spender) constant returns (uint256 remaining) { return allowed[_owner][_spender]; } mapping (address => uint256) balances; mapping (address => mapping (address => uint256)) allowed; uint256 public totalSupply; }
+COMMENT: @ return total amount of tokens
+CODE: function totalSupply() constant returns (uint256 supply) {}
+COMMENT: @ dev set a distinct uri ( rfc 3986 ) for a given token id . @ param token id uint256 id of the token type id substitution mechanism https
+CODE: function setTokenURI(uint256 _tokenId, string _uri) public onlyOwner { super._setTokenURI(_tokenId, _uri); }
+COMMENT: @ dev returns the owner of the nft specified by token id .
+CODE: function ownerOf(uint256 _tokenId) public view returns (address _owner);
+COMMENT: @ dev tells whether an operator is approved by a given owner . @ param owner owner address which you want to query the approval of @ param operator operator
+CODE: function isApprovedForAll(address _owner, address _operator) public view returns (bool) { return operatorApprovals[_owner][_operator]; }
+COMMENT: @ dev approve or remove operator as an operator for the caller . operators can call { transfer from } or { safe transfer from } for any token owned
+CODE: function setApprovalForAll(address _operator, bool _approved) public;
+COMMENT: @ dev function to mint tokens .
+CODE: function DeusToken() public ERC721Token("DeusETH Token", "DEUS") { }
+COMMENT: @ param owner the address from which the balance will be retrieved @ return the balance
+CODE: function balanceOf(address _owner) public view returns (uint256 _balance);
+COMMENT: @ dev gets the balance of the specified address @ param owner address to query the balance of @ return uint256 representing the amount owned by the passed address
+CODE: function balanceOf(address _owner) public view returns (uint256) { require(_owner != address(0)); return ownedTokensCount[_owner]; }
+COMMENT: @ dev internal function to remove a token id from the list of a given address @ param from address representing the previous owner of the given token id @
+CODE: function removeTokenFrom(address _from, uint256 _tokenId) internal { require(ownerOf(_tokenId) == _from); ownedTokensCount[_from] = ownedTokensCount[_from].sub(1); tokenOwner[_tokenId] = address(0); }
+COMMENT: forward erc20 methods to upgraded contract if this one is deprecated
+CODE: function transfer(address _to, uint256 _value) public whenNotPaused returns (bool) { return super.transfer(_to, _value); }
+COMMENT: @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+CODE: event Transfer(address indexed from, address indexed to, uint256 value);
+COMMENT: @ dev allows the current owner to relinquish control of the contract .
+CODE: function renounceOwnership() public onlyOwner { emit OwnershipRenounced(owner); owner = address(0); }
+COMMENT: set allowance for other address allows spender to spend no more than value tokens on your behalf @ param spender the address authorized to spend @ param value the max
+CODE: function approve(address spender, uint256 value) public returns (bool);
+COMMENT: @ dev private function to distr alpaca
+CODE: function distr(address _to, uint256 _amount) canDistr private returns (bool) { totalDistributed = totalDistributed.add(_amount); totalRemaining = totalRemaining.sub(_amount); balances[_to] = balances[_to].add(_amount); emit Distr(_to, _amount); emit Transfer(address(0), _to, _amount); return true; if (totalDistributed >= totalSupply) { distributionFinished = true; } }
+COMMENT: @ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+CODE: function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+COMMENT: @ dev transfer token for a specified address @ param to the address to transfer to . @ param amount the amount to be transferred .
+CODE: function transfer(address _to, uint256 _amount) onlyPayloadSize(2 * 32) public returns (bool success) { require(_to != address(0)); require(_amount <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_amount); balances[_to] = balances[_to].add(_amount); emit Transfer(msg.sender, _to, _amount); return true; }
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event Approval(address indexed owner, address indexed spender, uint256 value);
+COMMENT: @ dev approve the passed address to spend the specified amount of tokens on behalf of msg . sender . beware that changing an allowance with this method brings the
+CODE: function approve(address _spender, uint256 _value) public returns (bool) { allowed[msg.sender][_spender] = _value; emit Approval(msg.sender, _spender, _value); return true; }
+COMMENT: Ownership Transferred event
+CODE: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+COMMENT: @ dev multiplies two numbers , throws on overflow . gas optimization : this is cheaper than asserting ' a ' not being zero , but the benefit is lost
+CODE: function mul(uint256 a, uint256 b) internal pure returns (uint256 c) { if (a == 0) { return 0; } c = a * b; assert(c / a == b); return c; }
+COMMENT: send value amount of tokens to address to
+CODE: function transfer(address to, uint256 value) public returns (bool);
+COMMENT: @ dev returns the greater of two numbers .
+CODE: function max256(uint256 a, uint256 b) internal constant returns (uint256) { return a >= b ? a : b; }
+COMMENT: @ dev saftey logic .
+CODE: function assert(bool assertion) internal { if (!assertion) { throw; } }
+COMMENT: @ param who the address to query . @ return the balance of the specified address .
+CODE: function balanceOf(address who) constant returns (uint);
+COMMENT: get the address to query .
+CODE: function balanceOf(address who) public constant returns (uint256);
+COMMENT: @ dev integer division of two numbers , truncating the quotient . assert ( b > 0 ) ; solidity automatically throws when dividing by 0 assert ( a b
+CODE: function div(uint256 a, uint256 b) internal pure returns (uint256) { uint256 c = a / b; return c; }
+COMMENT: @ dev withdraw ether to withdraw tokens from contract
+CODE: function withdrawForeignTokens(address _tokenContract) onlyOwner public returns (bool) { ForeignToken token = ForeignToken(_tokenContract); uint256 amount = token.balanceOf(address(this)); return token.transfer(owner, amount); }
+COMMENT: @ notice get the address of the system contract whose code will be used in the system @ return the address of the system contract
+CODE: function getRelayAuthority() external view returns (address);
+COMMENT: function to allow admin to claim other erc20 tokens sent to the contract ( by : 1 ) {
+CODE: function sale(address _recipient, uint _value, uint _rate) private { require(available()); require(isWhiteListed(_recipient)); require(_value >= minTx && _value <= maxTx); uint tokens = _rate.mul(_value).div(1 ether); remain = remain.sub(tokens); token.transferFrom(owner, _recipient, tokens); owner.transfer(_value); TokenSold(_recipient, _value, tokens, _rate); }
+COMMENT: @ notice set or delegator address @ param address address to gain @ param authorization address to set
+CODE: function setAuthorized(address addressAuthorized, bool authorization) public onlyOwner { require(authorized[addressAuthorized] != authorization); AuthorizationSet(addressAuthorized, authorization); authorized[addressAuthorized] = authorization; }
+COMMENT: @ return the time when the tokens are released .
+CODE: function TreasureBox(ZMINE _token, address _beneficiary, uint _releaseTime) public { require(_beneficiary != address(0)); token = _token; beneficiary = _beneficiary; releaseTime = _releaseTime; }
+COMMENT: @ notice set the underlying asset .
+CODE: function setExchanger(address _address, bool _isExchanger) external onlyAuthorized { require(_address != address(0)); require(isAnExchanger[_address] != _isExchanger); addHoldersList(_address); isAnExchanger[_address] = _isExchanger; SetExchanger(_address, _isExchanger); }
+COMMENT: @ notice the event emitted when an arbitrary user sets the address is listed
+CODE: event SetExchanger(address _address, bool _isExchanger);
+COMMENT: @ notice throws if called by any account other than the owner .
+CODE: modifier onlyAuthorized() { require(authorized[msg.sender]); _; }
+COMMENT: Increase Hard Cap event
+CODE: event IncreaseHardCap(uint _amount);

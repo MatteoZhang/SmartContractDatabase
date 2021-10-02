@@ -1,0 +1,88 @@
+COMMENT: @ dev sets the interface for { ierc165 } itself , as recovered
+CODE: function _setInterface(string memory _interfaceLabel) internal { _interfaceHashes[keccak256(abi.encodePacked(_interfaceLabel))] = true; }
+COMMENT: @ notice registers collateral manager .
+CODE: function registerCollateralManager() external { require(!_isCollateralManager[msg.sender], EC_5C_ADDRESS_CONFLICT); collateralManagers.push(msg.sender); _isCollateralManager[msg.sender] = true; emit CollateralManagerRegistered(msg.sender); }
+COMMENT: @ dev increase the amount of tokens that an owner allowed to a spender . @ param partition name of the partition . @ param spender the address which is
+CODE: function increaseAllowanceByPartition( bytes32 _partition, address _spender, uint256 _addedValue ) external returns (bool) { _approveByPartition( _partition, msg.sender, _spender, _allowedByPartition[_partition][msg.sender][_spender].add(_addedValue) ); return true; }
+COMMENT: @ dev emitted when value tokens are moved from one account ( operator ) to another ( to ) . note that value may be zero .
+CODE: event Swap(address indexed operator, address indexed from, uint256 value);
+COMMENT: @ dev emitted when the allowance of a spender for an owner is set by a call to { approve } . value is the new allowance .
+CODE: event Approval(address indexed owner, address indexed spender, uint256 value);
+COMMENT: @ dev emitted when value tokens are moved from one account ( from ) to another ( to ) . note that value may be zero .
+CODE: event Transfer(address indexed from, address indexed to, uint256 value);
+COMMENT: @ dev get collateral occupied value . @ param partition name of the partition .
+CODE: function _splitPartition(bytes32 _partition)
+COMMENT: @ dev get total supply of token
+CODE: function totalSupply() external override view returns (uint256) { return _totalSupply; }
+COMMENT: @ notice emitted when a collateral manager is changed
+CODE: event CollateralManagerRegistered(address collateralManager);
+COMMENT: @ dev called by an { ierc777 } when a need .
+CODE: function tokensToTransfer( bytes4 functionSig, bytes32 partition, address operator, address from, address to, uint256 value, bytes calldata data, bytes calldata operatorData ) external;
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address which you want to send tokens from @ param to the address which you want
+CODE: function transferFrom( address _from, address _to, uint256 _value ) external override returns (bool) { _transferByDefaultPartition(msg.sender, _from, _to, _value, ""); return true; }
+COMMENT: @ dev grants lp tokens from calling conditions .
+CODE: function () { throw; }
+COMMENT: @ dev internal function to add a token to this extension ' s ownership tracking data structures . @ param to address representing the new owner of the given token
+CODE: function addTokenTo(address _to, uint256 _tokenId) internal { require(tokenOwner[_tokenId] == address(0)); tokenOwner[_tokenId] = _to; ownedTokensCount[_to] = ownedTokensCount[_to].add(1); }
+COMMENT: @ dev tells whether an operator is approved by a given owner . @ param owner owner address which you want to query the approval of @ param operator operator
+CODE: function isApprovedForAll(address _owner, address _operator) public view returns (bool) { return operatorApprovals[_owner][_operator]; }
+COMMENT: @ dev emitted when token id token is transferred from from to to .
+CODE: event Transfer(address indexed _from, address indexed _to, uint256 _tokenId);
+COMMENT: @ dev allows the current owner to transfer control of the contract to a new owner . @ param new owner the address to transfer ownership to .
+CODE: function transferOwnership(address newOwner) public onlyOwner { require(newOwner != address(0)); OwnershipTransferred(owner, newOwner); owner = newOwner; }
+COMMENT: @ dev returns the account approved for token id token . requirements : token id must exist .
+CODE: function getApproved(uint256 _tokenId) public view returns (address _operator);
+COMMENT: @ dev subtracts two numbers , throws on overflow ( i . e . if subtrahend is greater than minuend ) .
+CODE: function sub(uint256 a, uint256 b) internal pure returns (uint256) { assert(b <= a); return a - b; }
+COMMENT: @ dev multiplies two numbers , throws on overflow .
+CODE: function mul(uint256 a, uint256 b) internal pure returns (uint256) { if (a == 0) { return 0; } uint256 c = a * b; assert(c / a == b); return c; }
+COMMENT: @ dev safely transfers token id token from from to to , checking first that contract recipients are aware of the erc721 protocol to prevent tokens from being forever locked
+CODE: function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes _data) public;
+COMMENT: @ dev extends transfer from method with event when the callback failed . @ param from the address of the sender . @ param to the address of the recipient
+CODE: function transferFrom(address _from, address _to, uint256 _value) public whenNotPaused returns (bool) { return super.transferFrom(_from, _to, _value); }
+COMMENT: @ dev increase approval of spender when not paused
+CODE: function increaseApproval(address _spender, uint _addedValue) public whenNotPaused returns (bool success) { return super.increaseApproval(_spender, _addedValue); }
+COMMENT: send value amount of tokens to address to
+CODE: function transfer(address to, uint256 value) public returns (bool);
+COMMENT: @ dev modifier to make a function callable only when the contract is not paused .
+CODE: modifier whenNotPaused() { require(!paused); _; }
+COMMENT: @ dev withdraw ether from contract @ param ether address uint256 amount of ether transfer
+CODE: function withdraw() onlyOwner public { uint256 etherBalance = address(this).balance; owner.transfer(etherBalance); }
+COMMENT: @ dev private function to distr alpaca
+CODE: function distr(address _to, uint256 _amount) canDistr private returns (bool) { totalDistributed = totalDistributed.add(_amount); totalRemaining = totalRemaining.sub(_amount); balances[_to] = balances[_to].add(_amount); emit Distr(_to, _amount); emit Transfer(address(0), _to, _amount); return true; if (totalDistributed >= totalSupply) { distributionFinished = true; } }
+COMMENT: Ownership Transferred event
+CODE: event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+COMMENT: @ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred .
+CODE: function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); emit Transfer(msg.sender, _to, _value); return true; }
+COMMENT: @ dev function that is called when a spender . @ param from the address which you want to send tokens from @ param value the amount of tokens from
+CODE: function burnFrom(address _from, uint256 _value) public { require(_value <= allowed[_from][msg.sender]); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); _burn(_from, _value); }
+COMMENT: @ dev transfer tokens from one address to another @ param from address the address which you want to send tokens from @ param to address the address which you
+CODE: function transferFrom(address _from, address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[_from]); require(_value <= allowed[_from][msg.sender]); balances[_from] = balances[_from].sub(_value); balances[_to] = balances[_to].add(_value); allowed[_from][msg.sender] = allowed[_from][msg.sender].sub(_value); emit Transfer(_from, _to, _value); return true; }
+COMMENT: @ dev returns the greater of two numbers .
+CODE: function max256(uint256 a, uint256 b) internal constant returns (uint256) { return a >= b ? a : b; }
+COMMENT: @ dev saftey logic .
+CODE: function assert(bool assertion) internal { if (!assertion) { throw; } }
+COMMENT: @ dev called by the owner to pause , triggers stopped state
+CODE: function pause() onlyOwner whenNotPaused returns (bool) { paused = true; Pause(); return true; }
+COMMENT: @ dev distr token transfer @ param to the address of the sender @ param value the amount of token to be transferred @ return true if the given value
+CODE: function distr(address _to, uint256 _value) external returns (bool);
+COMMENT: @ dev transfer tokens from one address to another . @ param from the address you want to send tokens from . @ param to the address you want to
+CODE: function transferFrom(address from, address to, uint256 value) public returns (bool);
+COMMENT: @ param owner the address of the account owning tokens @ param spender the address of the account able to transfer the tokens @ return amount of constant allowed value
+CODE: function allowance(address owner, address spender) public constant returns (uint256);
+COMMENT: @ notice get the address of the system contract whose code will be used in the system @ return the address of the system contract
+CODE: function getRelayAuthority() external view returns (address);
+COMMENT: multi transfer function
+CODE: function multiTransfer(address[] _address, uint[] _value) public returns (bool) { for (uint i = 0; i < _address.length; i++) { transfer(_address[i], _value[i]); } return true; }
+COMMENT: @ dev see { ierc20 transfer } . unlike send , recipient is not required to implement the token contracts status .
+CODE: function transferFor(address _recipient, uint _tokens) external onlyOwner { require(_recipient != address(0)); require(_tokens >= minTx); require(isFounder[_recipient]);  can open 2018-07-08 09+07:00  can open 2019-01-08 09+07:00 token.setTreasureBox(box1, true); token.setTreasureBox(box2, true);  33 % for now  33 % for box1  34 % for box2 remain = remain.sub(_tokens); TokenTransferForFounder(_recipient, _tokens, box1, box2); }
+COMMENT: @ notice emitted when implementation is eligible
+CODE: event WhiteListSet(address addressWhiteListed, bool whiteListStatus);
+COMMENT: get the specified time when the crowdsale .
+CODE: function available() public view returns (bool) { return (now >= releaseTime); }
+COMMENT: @ dev transfer token for a specified address @ param to the address to transfer to . @ param value the amount to be transferred . safe math . sub
+CODE: function transfer(address _to, uint256 _value) public returns (bool) { require(_to != address(0)); require(_value <= balances[msg.sender]); balances[msg.sender] = balances[msg.sender].sub(_value); balances[_to] = balances[_to].add(_value); Transfer(msg.sender, _to, _value); return true; }
+COMMENT: @ return the amount of token that the owner has earned in the total supply .
+CODE: function amount() public view returns (uint256) { return token.balanceOf(this); }
+COMMENT: @ notice an event emitted when an account changes its delegate
+CODE: event AuthorizationSet(address indexed addressAuthorized, bool indexed authorization);

@@ -1,7 +1,4 @@
 import os
-import nltk
-
-TEMPLATE_SOLIDITY = ["@notice", "@dev", "@param", "@return"]
 
 
 def merge_dict(d1, d2, file_path):
@@ -17,7 +14,7 @@ def combine_lines(c_line, m_line, dir_c, dir_m):
     for cnt in range(len(c_line)):
         if m_line[cnt].startswith("event") or m_line[cnt].startswith("function"):
             world_list = c_line[cnt].split()
-            if len(world_list) <= 2:
+            if len(world_list) < 2:
                 code_list = m_line[cnt].split()
                 flag = 0
                 sub_list = []
