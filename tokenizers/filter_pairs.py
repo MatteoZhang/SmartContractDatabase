@@ -4,8 +4,9 @@ SOURCECODE = 'CodeComm/code_tok.original'
 COMMENT = 'CodeComm/doc_tok.original'
 OUT_SOURCE = 'CodeComm/code_sampled.original'
 OUT_COMM = 'CodeComm/doc_sampled.original'
-LINES = 499000
+LINES = 500000
 MaxLen = 5000
+MinLen = 10
 
 
 def main():
@@ -25,7 +26,7 @@ def main():
                 x = comm_lines[i] in comm_sample
                 # y = code_lines[i] in code_sample
                 if not x and comm_lines[i] != '':
-                    # if len(comm_lines[i]) < MaxLen and len(code_lines[i]) < MaxLen:
+                    # if MinLen < len(comm_lines[i]) < MaxLen and MinLen < len(code_lines[i]) < MaxLen:
                     code_sample.append(code_lines[i])
                     comm_sample.append(comm_lines[i])
             # ======
